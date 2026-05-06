@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<suite name="PetStore API Suite" parallel="classes" thread-count="4">
+
+    <test name="Pet Module">
+        <classes>
+            <class name="pet.UploadImageTests"/>
+        </classes>
+    </test>
+
+</suite>

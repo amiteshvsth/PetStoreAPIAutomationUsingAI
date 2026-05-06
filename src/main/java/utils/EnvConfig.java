@@ -1,0 +1,26 @@
+package utils;
+
+import io.github.cdimascio.dotenv.Dotenv;
+
+public final class EnvConfig {
+
+    private static final Dotenv dotenv = Dotenv.configure().ignoreIfMalformed().ignoreIfMissing().load();
+
+    private EnvConfig() {}
+
+    public static String get(String key) {
+        return dotenv.get(key);
+    }
+
+    public static String getOrDefault(String key, String defaultValue) {
+        String value = dotenv.get(key);
+        return value != null ? value : defaultValue;
+    }
+
+    public static String getValidApiKey() {
+        return get("VALID_API_KEY");
+    }
+    public static String getInvalidApiKey() {
+        return get("INVALID_API_KEY");
+    }
+}
