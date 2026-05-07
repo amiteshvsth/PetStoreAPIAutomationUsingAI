@@ -1,7 +1,6 @@
-package dataObjects.user.getUserByName;
+package dataObjects.user.logoutUser;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import dataObjects.user.UserRequestResponse;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +9,7 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class GetUserByNameResponse extends UserRequestResponse {
+public class LogoutUserResponse {
 
     @JsonIgnore
     private final Map<String, Object> additionalProperties = new LinkedHashMap<>();

@@ -1,4 +1,4 @@
-package dataObjects.user.createUsersWithArrayInput;
+package dataObjects.user.loginUser;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -14,40 +14,16 @@ import java.util.Map;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "id",
     "username",
-    "firstName",
-    "lastName",
-    "email",
-    "password",
-    "phone",
-    "userStatus"
+    "password"
 })
-public class CreateUsersWithArrayInputRequest {
-
-    @JsonProperty("id")
-    private Long id;
+public class LoginUserRequest {
 
     @JsonProperty("username")
     private String username;
 
-    @JsonProperty("firstName")
-    private String firstName;
-
-    @JsonProperty("lastName")
-    private String lastName;
-
-    @JsonProperty("email")
-    private String email;
-
     @JsonProperty("password")
     private String password;
-
-    @JsonProperty("phone")
-    private String phone;
-
-    @JsonProperty("userStatus")
-    private int userStatus;
 
     @JsonIgnore
     private final Map<String, Object> additionalProperties = new LinkedHashMap<>();

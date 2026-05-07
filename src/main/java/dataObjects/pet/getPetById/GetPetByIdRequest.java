@@ -1,7 +1,8 @@
-package dataObjects.user.getUserByName;
+package dataObjects.pet.getPetById;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import dataObjects.user.UserRequestResponse;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +11,12 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class GetUserByNameResponse extends UserRequestResponse {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+
+public class GetPetByIdRequest {
+
+    @JsonProperty("petId")
+    private Long petId;
 
     @JsonIgnore
     private final Map<String, Object> additionalProperties = new LinkedHashMap<>();

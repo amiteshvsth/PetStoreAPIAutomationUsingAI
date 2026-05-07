@@ -1,4 +1,4 @@
-package dataObjects.pet.updatePet;
+package dataObjects.pet.findPetsByTags;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -8,38 +8,19 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "id",
-    "category",
-    "name",
-    "photoUrls",
-    "tags",
-    "status"
+    "tags"
 })
-public class UpdatePetRequest {
-
-    @JsonProperty("id")
-    private Long id;
-
-    @JsonProperty("category")
-    private UpdatePetCategoryRequest category;
-
-    @JsonProperty("name")
-    private String name;
-
-    @JsonProperty("photoUrls")
-    private java.util.List<String> photoUrls;
+public class FindPetsByTagsRequest {
 
     @JsonProperty("tags")
-    private java.util.List<UpdatePetTagRequest> tags;
-
-    @JsonProperty("status")
-    private String status;
+    private List<String> tags;
 
     @JsonIgnore
     private final Map<String, Object> additionalProperties = new LinkedHashMap<>();

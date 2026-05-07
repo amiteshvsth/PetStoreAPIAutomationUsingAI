@@ -1,7 +1,7 @@
-package dataObjects.user.getUserByName;
+package dataObjects.pet.updatePetWithForm;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import dataObjects.user.UserRequestResponse;
+import dataObjects.pet.PetRequestResponse;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class GetUserByNameResponse extends UserRequestResponse {
+public class UpdatePetWithFormResponse extends PetRequestResponse {
 
     @JsonIgnore
     private final Map<String, Object> additionalProperties = new LinkedHashMap<>();

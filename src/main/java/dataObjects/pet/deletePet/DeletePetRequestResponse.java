@@ -1,10 +1,9 @@
-package dataObjects.user.updateUser;
+package dataObjects.pet.deletePet;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import dataObjects.user.UserRequestResponse;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,16 +14,15 @@ import java.util.Map;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "username",
-    "body"
+    "api_key"
 })
-public class UpdateUserRequest {
+public class DeletePetRequestResponse {
 
-    @JsonProperty("username")
-    private String username;
+    @JsonProperty("api_key")
+    private String apiKey;
 
-    @JsonProperty("body")
-    private UserRequestResponse body;
+    @JsonProperty("petId")
+    private Long petId;
 
     @JsonIgnore
     private final Map<String, Object> additionalProperties = new LinkedHashMap<>();

@@ -1,4 +1,4 @@
-package dataObjects.user.updateUser;
+package dataObjects.user.createUsersWithList;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -9,22 +9,19 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "username",
     "body"
 })
-public class UpdateUserRequest {
-
-    @JsonProperty("username")
-    private String username;
+public class CreateUsersWithListRequest {
 
     @JsonProperty("body")
-    private UserRequestResponse body;
+    private List<UserRequestResponse> body;
 
     @JsonIgnore
     private final Map<String, Object> additionalProperties = new LinkedHashMap<>();

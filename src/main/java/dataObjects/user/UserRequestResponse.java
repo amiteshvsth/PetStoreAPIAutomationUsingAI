@@ -1,14 +1,10 @@
-package dataObjects.user.createUsersWithListInput;
+package dataObjects.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @Getter
 @Setter
@@ -23,10 +19,10 @@ import java.util.Map;
     "phone",
     "userStatus"
 })
-public class CreateUsersWithListInputRequest {
+public class UserRequestResponse {
 
     @JsonProperty("id")
-    private Long id;
+    private int id;
 
     @JsonProperty("username")
     private String username;
@@ -47,8 +43,5 @@ public class CreateUsersWithListInputRequest {
     private String phone;
 
     @JsonProperty("userStatus")
-    private int userStatus;
-
-    @JsonIgnore
-    private final Map<String, Object> additionalProperties = new LinkedHashMap<>();
+    private Integer userStatus;
 }

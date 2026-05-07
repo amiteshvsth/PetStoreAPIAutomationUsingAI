@@ -1,10 +1,9 @@
-package dataObjects.user.updateUser;
+package dataObjects.store.getOrderById;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import dataObjects.user.UserRequestResponse;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,16 +14,12 @@ import java.util.Map;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "username",
-    "body"
+    "orderId"
 })
-public class UpdateUserRequest {
+public class GetOrderByIdRequest {
 
-    @JsonProperty("username")
-    private String username;
-
-    @JsonProperty("body")
-    private UserRequestResponse body;
+    @JsonProperty("orderId")
+    private Long orderId;
 
     @JsonIgnore
     private final Map<String, Object> additionalProperties = new LinkedHashMap<>();
