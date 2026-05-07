@@ -1,9 +1,9 @@
 package pet;
 
 import base.BaseTest;
-import dataFactory.pet.UploadImageDF;
-import dataObjects.pet.UploadImageRequest;
-import dataObjects.pet.UploadImageResponse;
+import dataFactory.pet.uploadImage.UploadImageDF;
+import dataObjects.pet.uploadImage.UploadImageRequest;
+import dataObjects.pet.uploadImage.UploadImageResponse;
 import org.testng.asserts.SoftAssert;
 import utils.ApiEndPoints;
 import io.restassured.response.Response;
@@ -21,7 +21,7 @@ public class UploadImageTests extends BaseTest {
                 .pathParam("petId", data.getPetId())
                 .multiPart("additionalMetadata", data.getAdditionalMetadata())
                 .multiPart("file", data.getFile())
-                .when().post(ApiEndPoints.UPLOAD_IMAGE).then()
+                .when().post(ApiEndPoints.PET_POST_UPLOAD_IMAGE).then()
                 .statusCode(200).extract().response();
 
         UploadImageResponse responseDto =  response.as(UploadImageResponse.class);
@@ -46,12 +46,12 @@ public class UploadImageTests extends BaseTest {
 
         Response response =
                 given().baseUri(ApiEndPoints.PETSTORE_BASE_URL)
-                        .spec(apiHelpers.requestSpecificationWithMultiPart()).log().ifValidationFails()
+                        .spec(apiHelpers.requestSpecificationWithMultiPart())
                         .pathParam("petId", data.getPetId())
                         .multiPart("additionalMetadata", data.getAdditionalMetadata())
                         .multiPart("file", data.getFile())
                         .when()
-                        .post(ApiEndPoints.UPLOAD_IMAGE).then().log().ifValidationFails().statusCode(200).extract().response();
+                        .post(ApiEndPoints.PET_POST_UPLOAD_IMAGE).then().statusCode(200).extract().response();
 
 
         UploadImageResponse responseDto =  response.as(UploadImageResponse.class);
@@ -68,5 +68,4 @@ public class UploadImageTests extends BaseTest {
         softAssert.assertEquals(responseDto.getMessage(), expectedMessage);
         softAssert.assertAll();
     }
-
 }

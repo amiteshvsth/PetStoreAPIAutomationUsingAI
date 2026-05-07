@@ -1,7 +1,7 @@
-package dataFactory.pet;
+package dataFactory.pet.uploadImage;
 
-import com.github.javafaker.Faker;
-import dataObjects.pet.UploadImageRequest;
+import net.datafaker.Faker;
+import dataObjects.pet.uploadImage.UploadImageRequest;
 import utils.JavaHelpers;
 
 public class UploadImageDF {

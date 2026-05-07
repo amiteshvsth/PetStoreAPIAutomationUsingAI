@@ -1,4 +1,4 @@
-package dataObjects.pet;
+package dataObjects.pet.uploadImage;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -13,20 +14,20 @@ import java.util.Map;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "code",
-        "type",
-        "message"
+        "petId",
+        "additionalMetadata",
+        "file"
 })
-public class UploadImageResponse {
+public class UploadImageRequest {
 
-    @JsonProperty("code")
-    private int code;
+    @JsonProperty("petId")
+    private Long petId;
 
-    @JsonProperty("type")
-    private String type;
+    @JsonProperty("additionalMetadata")
+    private String additionalMetadata;
 
-    @JsonProperty("message")
-    private String message;
+    @JsonProperty("file")
+    private File file;
 
     @JsonIgnore
     private final Map<String, Object> additionalProperties = new LinkedHashMap<>();
