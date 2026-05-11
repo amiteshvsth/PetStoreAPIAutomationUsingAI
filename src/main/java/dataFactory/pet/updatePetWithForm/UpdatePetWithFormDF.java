@@ -11,6 +11,7 @@ public class UpdatePetWithFormDF {
 
         UpdatePetWithFormRequest data = new UpdatePetWithFormRequest();
 
+        data.setId(faker.number().numberBetween(1L, 1000L));
         data.setName(faker.animal().name());
         data.setStatus("available");
 
