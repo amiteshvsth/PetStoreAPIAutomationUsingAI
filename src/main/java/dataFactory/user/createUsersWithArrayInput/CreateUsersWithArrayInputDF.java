@@ -1,15 +1,15 @@
 package dataFactory.user.createUsersWithArrayInput;
 
 import net.datafaker.Faker;
-import dataObjects.user.createUsersWithArrayInput.CreateUsersWithArrayInputRequest;
+import dataObjects.user.createUsersWithArrayInput.CreateUsersWithArrayRequestResponse;
 
 public class CreateUsersWithArrayInputDF {
 
     private static final Faker faker = new Faker();
 
-    public static CreateUsersWithArrayInputRequest getData() {
+    public static CreateUsersWithArrayRequestResponse getData() {
 
-        CreateUsersWithArrayInputRequest data = new CreateUsersWithArrayInputRequest();
+        CreateUsersWithArrayRequestResponse data = new CreateUsersWithArrayRequestResponse();
 
         data.setId(faker.number().numberBetween(1L, 1000L));
         data.setUsername(faker.name().username());

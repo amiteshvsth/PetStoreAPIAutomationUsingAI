@@ -1,4 +1,4 @@
-package dataObjects.pet.findPetsByTags;
+package dataObjects.pet.addPet;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,7 +13,7 @@ import lombok.Setter;
     "id",
     "name"
 })
-public class FindPetsByTagsCategoryResponse {
+public class AddPetTagRequestResponse {
 
     @JsonProperty("id")
     private Long id;

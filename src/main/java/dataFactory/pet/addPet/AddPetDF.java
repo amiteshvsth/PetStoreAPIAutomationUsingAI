@@ -1,9 +1,9 @@
 package dataFactory.pet.addPet;
 
 import net.datafaker.Faker;
-import dataObjects.pet.addPet.AddPetRequest;
-import dataObjects.pet.addPet.AddPetCategoryRequest;
-import dataObjects.pet.addPet.AddPetTagRequest;
+import dataObjects.pet.addPet.AddPetRequestResponse;
+import dataObjects.pet.addPet.AddPetCategoryRequestResponse;
+import dataObjects.pet.addPet.AddPetTagRequestResponse;
 
 import java.util.Arrays;
 
@@ -11,14 +11,14 @@ public class AddPetDF {
 
     private static final Faker faker = new Faker();
 
-    public static AddPetRequest getData() {
+    public static AddPetRequestResponse getData() {
 
-        AddPetRequest data = new AddPetRequest();
+        AddPetRequestResponse data = new AddPetRequestResponse();
 
         data.setId(faker.number().numberBetween(1L, 1000L));
         
         // Category data inline
-        AddPetCategoryRequest category = new AddPetCategoryRequest();
+        AddPetCategoryRequestResponse category = new AddPetCategoryRequestResponse();
         category.setId(faker.number().numberBetween(1L, 100L));
         category.setName(faker.animal().name());
         data.setCategory(category);
@@ -27,7 +27,7 @@ public class AddPetDF {
         data.setPhotoUrls(Arrays.asList(faker.internet().url()));
         
         // Tag data inline
-        AddPetTagRequest tag = new AddPetTagRequest();
+        AddPetTagRequestResponse tag = new AddPetTagRequestResponse();
         tag.setId(faker.number().numberBetween(1L, 100L));
         tag.setName(faker.lorem().word());
         data.setTags(Arrays.asList(tag));

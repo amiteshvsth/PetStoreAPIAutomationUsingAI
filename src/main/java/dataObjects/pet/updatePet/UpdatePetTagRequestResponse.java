@@ -1,4 +1,4 @@
-package dataObjects.pet.addPet;
+package dataObjects.pet.updatePet;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,7 +13,7 @@ import lombok.Setter;
     "id",
     "name"
 })
-public class AddPetCategoryRequest {
+public class UpdatePetTagRequestResponse {
 
     @JsonProperty("id")
     private Long id;

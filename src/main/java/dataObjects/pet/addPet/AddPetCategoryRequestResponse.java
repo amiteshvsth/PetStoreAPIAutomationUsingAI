@@ -13,7 +13,7 @@ import lombok.Setter;
     "id",
     "name"
 })
-public class AddPetTagRequest {
+public class AddPetCategoryRequestResponse {
 
     @JsonProperty("id")
     private Long id;

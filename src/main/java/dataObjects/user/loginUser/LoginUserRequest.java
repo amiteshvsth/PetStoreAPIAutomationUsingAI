@@ -1,4 +1,4 @@
-package dataObjects.pet.updatePetWithForm;
+package dataObjects.user.loginUser;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -14,20 +14,16 @@ import java.util.Map;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "id",
-    "name",
-    "status"
+    "username",
+    "password"
 })
-public class UpdatePetWithFormRequest {
+public class LoginUserRequest {
 
-    @JsonProperty("id")
-    private Long id;
+    @JsonProperty("username")
+    private String username;
 
-    @JsonProperty("name")
-    private String name;
-
-    @JsonProperty("status")
-    private String status;
+    @JsonProperty("password")
+    private String password;
 
     @JsonIgnore
     private final Map<String, Object> additionalProperties = new LinkedHashMap<>();

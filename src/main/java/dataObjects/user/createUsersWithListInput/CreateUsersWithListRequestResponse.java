@@ -23,7 +23,7 @@ import java.util.Map;
     "phone",
     "userStatus"
 })
-public class CreateUsersWithListInputRequest {
+public class CreateUsersWithListRequestResponse {
 
     @JsonProperty("id")
     private Long id;

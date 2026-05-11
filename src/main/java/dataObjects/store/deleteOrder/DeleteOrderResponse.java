@@ -1,4 +1,4 @@
-package dataObjects.store.placeOrder;
+package dataObjects.store.deleteOrder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -14,32 +14,20 @@ import java.util.Map;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "id",
-    "petId",
-    "quantity",
-    "shipDate",
-    "status",
-    "complete"
+    "code",
+    "type",
+    "message"
 })
-public class PlaceOrderRequest {
+public class DeleteOrderResponse {
 
-    @JsonProperty("id")
-    private Long id;
+    @JsonProperty("code")
+    private int code;
 
-    @JsonProperty("petId")
-    private Long petId;
+    @JsonProperty("type")
+    private String type;
 
-    @JsonProperty("quantity")
-    private int quantity;
-
-    @JsonProperty("shipDate")
-    private String shipDate;
-
-    @JsonProperty("status")
-    private String status;
-
-    @JsonProperty("complete")
-    private Boolean complete;
+    @JsonProperty("message")
+    private String message;
 
     @JsonIgnore
     private final Map<String, Object> additionalProperties = new LinkedHashMap<>();

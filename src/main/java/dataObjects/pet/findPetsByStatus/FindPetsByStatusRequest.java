@@ -1,23 +1,18 @@
-package dataObjects.pet.updatePet;
+package dataObjects.pet.findPetsByStatus;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "id",
-    "name"
+    "status"
 })
-public class UpdatePetTagRequest {
-
-    @JsonProperty("id")
-    private Long id;
-
-    @JsonProperty("name")
-    private String name;
+public class FindPetsByStatusRequest {
+    private List<String> status;
 }

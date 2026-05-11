@@ -1,4 +1,4 @@
-package dataObjects.pet.addPet;
+package dataObjects.pet.updatePet;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -21,13 +21,13 @@ import java.util.Map;
     "tags",
     "status"
 })
-public class AddPetRequest {
+public class UpdatePetRequestResponse {
 
     @JsonProperty("id")
     private Long id;
 
     @JsonProperty("category")
-    private AddPetCategoryRequest category;
+    private UpdatePetCategoryRequestResponse category;
 
     @JsonProperty("name")
     private String name;
@@ -36,7 +36,7 @@ public class AddPetRequest {
     private java.util.List<String> photoUrls;
 
     @JsonProperty("tags")
-    private java.util.List<AddPetTagRequest> tags;
+    private java.util.List<UpdatePetTagRequestResponse> tags;
 
     @JsonProperty("status")
     private String status;
