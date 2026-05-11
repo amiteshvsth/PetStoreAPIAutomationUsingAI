@@ -2,8 +2,8 @@ package base;
 
 import io.restassured.RestAssured;
 import io.restassured.filter.log.LogDetail;
-import utils.ApiEndPoints;
-import utils.ApiHelpers;
+import utilities.ApiEndPoints;
+import utilities.ApiHelpers;
 import org.testng.annotations.BeforeClass;
 
 public class BaseTest {

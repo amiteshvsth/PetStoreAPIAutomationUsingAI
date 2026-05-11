@@ -12,7 +12,7 @@ public class UpdateUserDF {
         UpdateUserRequest data = new UpdateUserRequest();
 
         data.setId(faker.number().numberBetween(1L, 1000L));
-        data.setUsername(faker.name().username());
+        data.setUsername(faker.name().fullName());
         data.setFirstName(faker.name().firstName());
         data.setLastName(faker.name().lastName());
         data.setEmail(faker.internet().emailAddress());

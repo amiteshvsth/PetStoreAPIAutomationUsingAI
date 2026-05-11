@@ -16,7 +16,7 @@ public class CreateUsersWithArrayDF {
         CreateUsersWithArrayRequestResponse user1 = new CreateUsersWithArrayRequestResponse();
 
         user1.setId(faker.number().numberBetween(1L, 1000L));
-        user1.setUsername(faker.name().username());
+        user1.setUsername(faker.name().fullName());
         user1.setFirstName(faker.name().firstName());
         user1.setLastName(faker.name().lastName());
         user1.setEmail(faker.internet().emailAddress());
@@ -27,7 +27,7 @@ public class CreateUsersWithArrayDF {
         CreateUsersWithArrayRequestResponse user2 = new CreateUsersWithArrayRequestResponse();
 
         user1.setId(faker.number().numberBetween(1L, 1000L));
-        user1.setUsername(faker.name().username());
+        user1.setUsername(faker.name().fullName());
         user1.setFirstName(faker.name().firstName());
         user1.setLastName(faker.name().lastName());
         user1.setEmail(faker.internet().emailAddress());

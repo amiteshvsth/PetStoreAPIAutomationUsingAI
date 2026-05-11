@@ -5,10 +5,10 @@ import dataFactory.pet.uploadImage.UploadImageDF;
 import dataObjects.pet.uploadImage.UploadImageRequest;
 import dataObjects.pet.uploadImage.UploadImageResponse;
 import org.testng.asserts.SoftAssert;
-import utils.ApiEndPoints;
+import utilities.ApiEndPoints;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
-import utils.JavaHelpers;
+import utilities.JavaHelpers;
 
 import static io.restassured.RestAssured.given;
 

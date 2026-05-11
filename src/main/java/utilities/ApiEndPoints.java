@@ -1,4 +1,4 @@
-package utils;
+package utilities;
 
 public class ApiEndPoints {
     public static final String PETSTORE_BASE_URL = "https://petstore.swagger.io/v2";
@@ -29,5 +29,3 @@ public class ApiEndPoints {
     public static final String USER_PUT_UPDATE_USER = "/user/{username}";
     public static final String USER_DELETE_USER = "/user/{username}";
 }
-
-// ModuleName_MethodType_APIName
