@@ -1,4 +1,4 @@
-package pet;
+package petstore.pet;
 
 import base.BaseTest;
 import dataFactory.pet.uploadImage.UploadImageDF;
@@ -15,7 +15,7 @@ import static io.restassured.RestAssured.given;
 public class UploadImageTests extends BaseTest {
 
     @Test
-    public void verifyThatUploadImageShouldReturn200WhenValidPayload() {
+    public void Pet_POST_UploadImage_Success() {
         UploadImageRequest data = UploadImageDF.getData();
         Response response = given().spec(apiHelpers.requestSpecificationWithMultiPart())
                 .pathParam("petId", data.getPetId())

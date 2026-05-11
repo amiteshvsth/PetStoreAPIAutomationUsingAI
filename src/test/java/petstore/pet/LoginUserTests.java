@@ -1,4 +1,4 @@
-package pet;
+package petstore.pet;
 
 import base.BaseTest;
 import dataObjects.user.loginUser.LoginUserRequest;
