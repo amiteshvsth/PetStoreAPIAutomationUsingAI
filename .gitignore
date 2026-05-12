@@ -4,6 +4,7 @@ target/
 !**/src/test/**/target/
 .kotlin
 .env
+test-output/
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
