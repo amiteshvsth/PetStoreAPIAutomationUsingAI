@@ -1,5 +1,6 @@
 package utilities;
 
+import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
@@ -13,48 +14,65 @@ import java.util.function.Supplier;
 public class ApiHelpers {
 
 
+    private static final ThreadLocal<String> BASE_URI = new ThreadLocal<>();
+
+    public static void setBaseUri(String baseUri) {
+        BASE_URI.set(baseUri);
+    }
+
+    public static void clearBaseUri() {
+        BASE_URI.remove();
+    }
+
+    private static RequestSpecBuilder baseRequestSpecBuilder() {
+
+        return new RequestSpecBuilder()
+                .setBaseUri(BASE_URI.get())
+                .addFilter(new AllureRestAssured());
+    }
+
     public RequestSpecification requestSpecificationWithJSONHeader() {
-        return new RequestSpecBuilder().setContentType(ContentType.JSON).build();
+        return baseRequestSpecBuilder().setContentType(ContentType.JSON).build();
     }
 
     public RequestSpecification requestSpecificationWithMultiPart() {
-        return new RequestSpecBuilder().setContentType(ContentType.MULTIPART).build();
+        return baseRequestSpecBuilder().setContentType(ContentType.MULTIPART).build();
     }
 
     public RequestSpecification requestSpecificationWithContentTypeEncoded() {
-        return new RequestSpecBuilder().setContentType(ContentType.URLENC).build();
+        return baseRequestSpecBuilder().setContentType(ContentType.URLENC).build();
     }
 
     public RequestSpecification requestSpecificationWithXMLHeader() {
-        return new RequestSpecBuilder().setContentType(ContentType.XML).build();
+        return baseRequestSpecBuilder().setContentType(ContentType.XML).build();
     }
 
     public RequestSpecification requestSpecificationWithTextHeader() {
-        return new RequestSpecBuilder().setContentType(ContentType.TEXT).build();
+        return baseRequestSpecBuilder().setContentType(ContentType.TEXT).build();
     }
 
     public RequestSpecification requestSpecificationWithHTMLHeader() {
-        return new RequestSpecBuilder().setContentType(ContentType.HTML).build();
+        return baseRequestSpecBuilder().setContentType(ContentType.HTML).build();
     }
 
     public RequestSpecification requestSpecificationWithFormUrlEncoded() {
-        return new RequestSpecBuilder().setContentType(ContentType.URLENC).build();
+        return baseRequestSpecBuilder().setContentType(ContentType.URLENC).build();
     }
 
     public RequestSpecification requestSpecificationWithBinaryHeader() {
-        return new RequestSpecBuilder().setContentType(ContentType.BINARY).build();
+        return baseRequestSpecBuilder().setContentType(ContentType.BINARY).build();
     }
 
     public RequestSpecification requestSpecificationWithAnyHeader() {
-        return new RequestSpecBuilder().setContentType(ContentType.ANY).build();
+        return baseRequestSpecBuilder().setContentType(ContentType.ANY).build();
     }
 
     public RequestSpecification requestSpecificationWithApiKeyAuthentication(String apiKey) {
-        return new RequestSpecBuilder().addHeader("api_key", apiKey).build();
+        return baseRequestSpecBuilder().addHeader("api_key", apiKey).build();
     }
 
     public RequestSpecification requestSpecificationWithCustomHeader(String headerName, String headerValue) {
-        return new RequestSpecBuilder().addHeader(headerName, headerValue).build();
+        return baseRequestSpecBuilder().addHeader(headerName, headerValue).build();
     }
 
     public Response retryApi(Supplier<Response> apiCall, int maxRetries, long waitMilliSeconds) {
