@@ -39,4 +39,78 @@ public class CreateUsersWithListDF {
         data.add(user2);
         return data;
     }
+
+    public static List<CreateUsersWithListRequestResponse> getValidList() {
+        List<CreateUsersWithListRequestResponse> data = new ArrayList<>();
+
+        for (int i = 0; i < 3; i++) {
+            CreateUsersWithListRequestResponse user = new CreateUsersWithListRequestResponse();
+            user.setId(faker.number().numberBetween(1L, 1000L));
+            user.setUsername(faker.name().fullName() + "_" + i);
+            user.setFirstName(faker.name().firstName());
+            user.setLastName(faker.name().lastName());
+            user.setEmail(faker.internet().emailAddress());
+            user.setPassword(faker.internet().password());
+            user.setPhone(faker.phoneNumber().cellPhone());
+            user.setUserStatus(faker.number().numberBetween(1, 10));
+            data.add(user);
+        }
+
+        return data;
+    }
+
+    public static List<CreateUsersWithListRequestResponse> getEmptyList() {
+        return new ArrayList<>();
+    }
+
+    public static List<CreateUsersWithListRequestResponse> getNullList() {
+        return null;
+    }
+
+    public static List<CreateUsersWithListRequestResponse> getListWithInvalidUser() {
+        List<CreateUsersWithListRequestResponse> data = new ArrayList<>();
+
+        CreateUsersWithListRequestResponse invalidUser = new CreateUsersWithListRequestResponse();
+        invalidUser.setEmail("invalid-email-format");
+        data.add(invalidUser);
+
+        return data;
+    }
+
+    public static List<CreateUsersWithListRequestResponse> getSingleUserList() {
+        List<CreateUsersWithListRequestResponse> data = new ArrayList<>();
+
+        CreateUsersWithListRequestResponse user = new CreateUsersWithListRequestResponse();
+        user.setId(faker.number().numberBetween(1L, 1000L));
+        user.setUsername(faker.name().fullName());
+        user.setFirstName(faker.name().firstName());
+        user.setLastName(faker.name().lastName());
+        user.setEmail(faker.internet().emailAddress());
+        user.setPassword(faker.internet().password());
+        user.setPhone(faker.phoneNumber().cellPhone());
+        user.setUserStatus(faker.number().numberBetween(1, 10));
+        data.add(user);
+
+        return data;
+    }
+
+    public static List<CreateUsersWithListRequestResponse> getListWithDuplicateUsernames() {
+        List<CreateUsersWithListRequestResponse> data = new ArrayList<>();
+        String duplicateUsername = faker.name().fullName();
+
+        for (int i = 0; i < 2; i++) {
+            CreateUsersWithListRequestResponse user = new CreateUsersWithListRequestResponse();
+            user.setId(faker.number().numberBetween(1L, 1000L));
+            user.setUsername(duplicateUsername);
+            user.setFirstName(faker.name().firstName());
+            user.setLastName(faker.name().lastName());
+            user.setEmail(faker.internet().emailAddress());
+            user.setPassword(faker.internet().password());
+            user.setPhone(faker.phoneNumber().cellPhone());
+            user.setUserStatus(faker.number().numberBetween(1, 10));
+            data.add(user);
+        }
+
+        return data;
+    }
 }

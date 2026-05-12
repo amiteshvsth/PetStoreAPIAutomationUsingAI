@@ -47,7 +47,7 @@ public class CreateUserRequest {
     private String phone;
 
     @JsonProperty("userStatus")
-    private int userStatus;
+    private Integer userStatus;
 
     @JsonIgnore
     private final Map<String, Object> additionalProperties = new LinkedHashMap<>();

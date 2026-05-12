@@ -3,6 +3,8 @@ package dataFactory.pet.updatePetWithForm;
 import net.datafaker.Faker;
 import dataObjects.pet.updatePetWithForm.UpdatePetWithFormRequest;
 
+import java.util.Map;
+
 public class UpdatePetWithFormDF {
 
     private static final Faker faker = new Faker();

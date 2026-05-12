@@ -1,8 +1,6 @@
 package dataFactory.store.placeOrder;
-
 import net.datafaker.Faker;
 import dataObjects.store.placeOrder.PlaceOrderRequestResponse;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -11,7 +9,6 @@ public class PlaceOrderDF {
     private static final Faker faker = new Faker();
 
     public static PlaceOrderRequestResponse getData() {
-
         PlaceOrderRequestResponse data = new PlaceOrderRequestResponse();
 
         data.setId(faker.number().numberBetween(1L, 1000L));
