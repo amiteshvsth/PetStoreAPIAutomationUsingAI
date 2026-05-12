@@ -5,9 +5,12 @@ import dataFactory.user.createUser.CreateUserDF;
 import dataObjects.user.createUser.CreateUserRequest;
 import dataObjects.user.loginUser.LoginUserResponse;
 import io.restassured.response.Response;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import utilities.ApiEndPoints;
+import utilities.ApiHelpers;
 
 import java.util.Map;
 
@@ -15,10 +18,20 @@ import static io.restassured.RestAssured.given;
 
 public class GetLoginUserTests extends BaseTest {
 
+    @BeforeClass()
+    public void beforeTest() {
+        ApiHelpers.setBaseUri(ApiEndPoints.PETSTORE_BASE_URL);
+    }
+
+    @AfterClass()
+    public void afterClass() {
+        ApiHelpers.clearBaseUri();
+    }
+
     @Test
     public void User_Get_LoginUser_Success_ValidCredentials() {
         CreateUserRequest createUser = CreateUserDF.getData();
-        
+
         given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(createUser)
@@ -28,10 +41,10 @@ public class GetLoginUserTests extends BaseTest {
                 .statusCode(200);
 
         Map<String, Object> queryParams = Map.of(
-            "username", createUser.getUsername(),
-            "password", createUser.getPassword()
+                "username", createUser.getUsername(),
+                "password", createUser.getPassword()
         );
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .queryParams(queryParams)
@@ -42,7 +55,7 @@ public class GetLoginUserTests extends BaseTest {
                 .extract().response();
 
         LoginUserResponse responseDto = response.as(LoginUserResponse.class);
-        
+
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(responseDto.getCode(), 200);
         softAssert.assertNotNull(responseDto.getMessage());
@@ -53,7 +66,7 @@ public class GetLoginUserTests extends BaseTest {
     @Test
     public void User_Get_LoginUser_BadRequest_ValidUsernameInvalidPassword() {
         CreateUserRequest createUser = CreateUserDF.getData();
-        
+
         given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(createUser)
@@ -63,10 +76,10 @@ public class GetLoginUserTests extends BaseTest {
                 .statusCode(200);
 
         Map<String, Object> queryParams = Map.of(
-            "username", createUser.getUsername(),
-            "password", "invalidpassword"
+                "username", createUser.getUsername(),
+                "password", "invalidpassword"
         );
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .queryParams(queryParams)
@@ -80,7 +93,7 @@ public class GetLoginUserTests extends BaseTest {
     @Test
     public void User_Get_LoginUser_BadRequest_InvalidUsernameValidPassword() {
         CreateUserRequest createUser = CreateUserDF.getData();
-        
+
         given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(createUser)
@@ -90,10 +103,10 @@ public class GetLoginUserTests extends BaseTest {
                 .statusCode(200);
 
         Map<String, Object> queryParams = Map.of(
-            "username", "invalidusername",
-            "password", createUser.getPassword()
+                "username", "invalidusername",
+                "password", createUser.getPassword()
         );
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .queryParams(queryParams)
@@ -107,9 +120,9 @@ public class GetLoginUserTests extends BaseTest {
     @Test
     public void User_Get_LoginUser_BadRequest_MissingUsername() {
         Map<String, Object> queryParams = Map.of(
-            "password", "somepassword"
+                "password", "somepassword"
         );
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .queryParams(queryParams)
@@ -123,9 +136,9 @@ public class GetLoginUserTests extends BaseTest {
     @Test
     public void User_Get_LoginUser_BadRequest_MissingPassword() {
         Map<String, Object> queryParams = Map.of(
-            "username", "someusername"
+                "username", "someusername"
         );
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .queryParams(queryParams)
@@ -139,10 +152,10 @@ public class GetLoginUserTests extends BaseTest {
     @Test
     public void User_Get_LoginUser_BadRequest_EmptyCredentials() {
         Map<String, Object> queryParams = Map.of(
-            "username", "",
-            "password", ""
+                "username", "",
+                "password", ""
         );
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .queryParams(queryParams)
@@ -156,7 +169,7 @@ public class GetLoginUserTests extends BaseTest {
     @Test
     public void User_Get_LoginUser_Success_VerifyResponseHeaders() {
         CreateUserRequest createUser = CreateUserDF.getData();
-        
+
         given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(createUser)
@@ -166,10 +179,10 @@ public class GetLoginUserTests extends BaseTest {
                 .statusCode(200);
 
         Map<String, Object> queryParams = Map.of(
-            "username", createUser.getUsername(),
-            "password", createUser.getPassword()
+                "username", createUser.getUsername(),
+                "password", createUser.getPassword()
         );
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .queryParams(queryParams)
@@ -181,7 +194,7 @@ public class GetLoginUserTests extends BaseTest {
 
         String expiresAfterHeader = response.getHeader("X-Expires-After");
         String rateLimitHeader = response.getHeader("X-Rate-Limit");
-        
+
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertNotNull(expiresAfterHeader, "X-Expires-After header should be present");
         softAssert.assertNotNull(rateLimitHeader, "X-Rate-Limit header should be present");

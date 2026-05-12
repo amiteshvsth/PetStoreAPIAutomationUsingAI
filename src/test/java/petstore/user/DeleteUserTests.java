@@ -4,18 +4,31 @@ import base.BaseTest;
 import dataFactory.user.createUser.CreateUserDF;
 import dataObjects.user.createUser.CreateUserRequest;
 import io.restassured.response.Response;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import utilities.ApiEndPoints;
+import utilities.ApiHelpers;
 
 import static io.restassured.RestAssured.given;
 
 public class DeleteUserTests extends BaseTest {
 
+    @BeforeClass()
+    public void beforeTest() {
+        ApiHelpers.setBaseUri(ApiEndPoints.PETSTORE_BASE_URL);
+    }
+
+    @AfterClass()
+    public void afterClass() {
+        ApiHelpers.clearBaseUri();
+    }
+
     @Test
     public void User_Delete_User_Success_ExistingUser() {
         CreateUserRequest createUser = CreateUserDF.getData();
-        
+
         given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(createUser)
@@ -41,7 +54,7 @@ public class DeleteUserTests extends BaseTest {
     @Test
     public void User_Delete_User_NotFound_NonExistentUser() {
         String nonExistentUsername = "nonexistentuser12345";
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("username", nonExistentUsername)
@@ -55,7 +68,7 @@ public class DeleteUserTests extends BaseTest {
     @Test
     public void User_Delete_User_BadRequest_EmptyUsername() {
         String emptyUsername = "";
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("username", emptyUsername)
@@ -70,7 +83,7 @@ public class DeleteUserTests extends BaseTest {
     public void User_Delete_User_Success_SpecialCharactersUsername() {
         CreateUserRequest createUser = CreateUserDF.getData();
         createUser.setUsername("User@#$%^&*()_+-=[]{}|;':\",./<>?");
-        
+
         given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(createUser)

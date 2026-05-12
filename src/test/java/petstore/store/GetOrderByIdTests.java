@@ -2,21 +2,34 @@ package petstore.store;
 
 import base.BaseTest;
 import dataFactory.store.placeOrder.PlaceOrderDF;
-import dataObjects.store.placeOrder.PlaceOrderRequestResponse;
 import dataObjects.store.getOrderById.GetOrderByIdResponse;
+import dataObjects.store.placeOrder.PlaceOrderRequestResponse;
 import io.restassured.response.Response;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import utilities.ApiEndPoints;
+import utilities.ApiHelpers;
 
 import static io.restassured.RestAssured.given;
 
 public class GetOrderByIdTests extends BaseTest {
 
+    @BeforeClass()
+    public void beforeTest() {
+        ApiHelpers.setBaseUri(ApiEndPoints.PETSTORE_BASE_URL);
+    }
+
+    @AfterClass()
+    public void afterClass() {
+        ApiHelpers.clearBaseUri();
+    }
+
     @Test
     public void Store_Get_GetOrderById_Success_ValidOrderId() {
         PlaceOrderRequestResponse createOrder = PlaceOrderDF.getData();
-        
+
         Response createResponse = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(createOrder)
@@ -27,7 +40,7 @@ public class GetOrderByIdTests extends BaseTest {
                 .extract().response();
 
         PlaceOrderRequestResponse createdOrder = createResponse.as(PlaceOrderRequestResponse.class);
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("orderId", createdOrder.getId())
@@ -38,7 +51,7 @@ public class GetOrderByIdTests extends BaseTest {
                 .extract().response();
 
         GetOrderByIdResponse responseDto = response.as(GetOrderByIdResponse.class);
-        
+
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(responseDto.getId(), createdOrder.getId());
         softAssert.assertEquals(responseDto.getPetId(), createdOrder.getPetId());
@@ -51,7 +64,7 @@ public class GetOrderByIdTests extends BaseTest {
     public void Store_Get_GetOrderById_Success_MinimumBoundary() {
         PlaceOrderRequestResponse createOrder = PlaceOrderDF.getData();
         createOrder.setId(1L);
-        
+
         Response createResponse = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(createOrder)
@@ -62,7 +75,7 @@ public class GetOrderByIdTests extends BaseTest {
                 .extract().response();
 
         PlaceOrderRequestResponse createdOrder = createResponse.as(PlaceOrderRequestResponse.class);
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("orderId", createdOrder.getId())
@@ -73,7 +86,7 @@ public class GetOrderByIdTests extends BaseTest {
                 .extract().response();
 
         GetOrderByIdResponse responseDto = response.as(GetOrderByIdResponse.class);
-        
+
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertNotNull(responseDto);
         softAssert.assertEquals(responseDto.getId(), createdOrder.getId());
@@ -83,7 +96,7 @@ public class GetOrderByIdTests extends BaseTest {
     @Test
     public void Store_Get_GetOrderById_Success_MaximumBoundary() {
         Long orderId = 10L;
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("orderId", orderId)
@@ -94,7 +107,7 @@ public class GetOrderByIdTests extends BaseTest {
                 .extract().response();
 
         GetOrderByIdResponse responseDto = response.as(GetOrderByIdResponse.class);
-        
+
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertNotNull(responseDto);
         softAssert.assertAll();
@@ -103,7 +116,7 @@ public class GetOrderByIdTests extends BaseTest {
     @Test
     public void Store_Get_GetOrderById_BadRequest_BelowMinimum() {
         Long orderId = 0L;
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("orderId", orderId)
@@ -113,7 +126,6 @@ public class GetOrderByIdTests extends BaseTest {
                 .statusCode(404)
                 .extract().response();
     }
-
 
 
     @Test

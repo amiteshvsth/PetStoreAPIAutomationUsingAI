@@ -5,21 +5,33 @@ import dataFactory.pet.addPet.AddPetDF;
 import dataObjects.pet.addPet.AddPetRequestResponse;
 import dataObjects.pet.findPetsByStatus.FindPetsByStatusResponse;
 import io.restassured.response.Response;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import utilities.ApiEndPoints;
+import utilities.ApiHelpers;
 
 import java.util.List;
-import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 
 public class GetFindPetsByTagsTests extends BaseTest {
 
+    @BeforeClass()
+    public void beforeTest() {
+        ApiHelpers.setBaseUri(ApiEndPoints.PETSTORE_BASE_URL);
+    }
+
+    @AfterClass()
+    public void afterClass() {
+        ApiHelpers.clearBaseUri();
+    }
+
     @Test
     public void Pet_Get_FindPetsByTags_Success_SingleValidTag() {
         AddPetRequestResponse pet = AddPetDF.getData();
-        
+
         given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(pet)
@@ -29,10 +41,10 @@ public class GetFindPetsByTagsTests extends BaseTest {
                 .statusCode(200);
 
         String queryParams = "tag1";
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
-                .queryParams("tags",queryParams)
+                .queryParams("tags", queryParams)
                 .when()
                 .get(ApiEndPoints.PET_GET_FIND_BY_TAGS)
                 .then()
@@ -40,7 +52,7 @@ public class GetFindPetsByTagsTests extends BaseTest {
                 .extract().response();
 
         List<FindPetsByStatusResponse> responseDto = response.jsonPath().getList("", FindPetsByStatusResponse.class);
-        
+
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertTrue(!responseDto.isEmpty());
         softAssert.assertAll();
@@ -49,7 +61,7 @@ public class GetFindPetsByTagsTests extends BaseTest {
     @Test
     public void Pet_Get_FindPetsByTags_Success_MultipleValidTags() {
         AddPetRequestResponse pet = AddPetDF.getData();
-        
+
         given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(pet)
@@ -60,7 +72,7 @@ public class GetFindPetsByTagsTests extends BaseTest {
 
 
         String queryParams = "tag1,tag2";
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .queryParams("tags", queryParams)
@@ -71,7 +83,7 @@ public class GetFindPetsByTagsTests extends BaseTest {
                 .extract().response();
 
         List<FindPetsByStatusResponse> responseDto = response.jsonPath().getList("", FindPetsByStatusResponse.class);
-        
+
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertTrue(!responseDto.isEmpty());
         softAssert.assertAll();
@@ -80,8 +92,8 @@ public class GetFindPetsByTagsTests extends BaseTest {
     @Test
     public void Pet_Get_FindPetsByTags_Success_NonExistentTag() {
 
-       String queryParams="nonexistenttag";
-        
+        String queryParams = "nonexistenttag";
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .queryParams("tags", queryParams)
@@ -92,7 +104,7 @@ public class GetFindPetsByTagsTests extends BaseTest {
                 .extract().response();
 
         List<FindPetsByStatusResponse> responseDto = response.jsonPath().getList("", FindPetsByStatusResponse.class);
-        
+
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(responseDto.size(), 0);
         softAssert.assertAll();
@@ -101,8 +113,8 @@ public class GetFindPetsByTagsTests extends BaseTest {
     @Test
     public void Pet_Get_FindPetsByTags_BadRequest_EmptyTags() {
 
-        String queryParams= "";
-        
+        String queryParams = "";
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .queryParams("tags", queryParams)
@@ -117,7 +129,7 @@ public class GetFindPetsByTagsTests extends BaseTest {
     public void Pet_Get_FindPetsByTags_BadRequest_InvalidTag() {
 
         String queryParams = "invalid@tag";
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .queryParams("tags", queryParams)
@@ -131,7 +143,7 @@ public class GetFindPetsByTagsTests extends BaseTest {
     @Test
     public void Pet_Get_FindPetsByTags_Unauthorized() {
         String queryParams = "tag1";
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .header("Authorization", "Bearer invalid_token")
@@ -146,7 +158,7 @@ public class GetFindPetsByTagsTests extends BaseTest {
     @Test
     public void Pet_Get_FindPetsByTags_Success_DeprecationWarning() {
         String queryParams = "available";
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .queryParams("tags", queryParams)
@@ -157,7 +169,7 @@ public class GetFindPetsByTagsTests extends BaseTest {
                 .extract().response();
 
         String deprecationHeader = response.getHeader("Deprecation");
-        
+
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(deprecationHeader, "true");
         softAssert.assertAll();

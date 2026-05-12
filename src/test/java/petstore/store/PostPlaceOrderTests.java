@@ -5,14 +5,27 @@ import dataFactory.store.placeOrder.PlaceOrderDF;
 import dataObjects.store.placeOrder.PlaceOrderRequestResponse;
 import io.restassured.response.Response;
 import net.datafaker.Faker;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import utilities.ApiEndPoints;
+import utilities.ApiHelpers;
 
 import static io.restassured.RestAssured.given;
 
 public class PostPlaceOrderTests extends BaseTest {
     private static final Faker faker = new Faker();
+
+    @BeforeClass()
+    public void beforeTest() {
+        ApiHelpers.setBaseUri(ApiEndPoints.PETSTORE_BASE_URL);
+    }
+
+    @AfterClass()
+    public void afterClass() {
+        ApiHelpers.clearBaseUri();
+    }
 
     @Test
     public void Store_Post_PlaceOrder_Success_RequiredFieldsOnly() {
@@ -21,7 +34,7 @@ public class PostPlaceOrderTests extends BaseTest {
         request.setShipDate(null);
         request.setStatus(null);
         request.setComplete(null);
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(request)
@@ -32,7 +45,7 @@ public class PostPlaceOrderTests extends BaseTest {
                 .extract().response();
 
         PlaceOrderRequestResponse responseDto = response.as(PlaceOrderRequestResponse.class);
-        
+
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(responseDto.getPetId(), request.getPetId());
         softAssert.assertEquals(responseDto.getQuantity(), request.getQuantity());
@@ -43,7 +56,7 @@ public class PostPlaceOrderTests extends BaseTest {
     @Test
     public void Store_Post_PlaceOrder_Success_AllFields() {
         PlaceOrderRequestResponse request = PlaceOrderDF.getData();
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(request)
@@ -54,7 +67,7 @@ public class PostPlaceOrderTests extends BaseTest {
                 .extract().response();
 
         PlaceOrderRequestResponse responseDto = response.as(PlaceOrderRequestResponse.class);
-        
+
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(responseDto.getPetId(), request.getPetId());
         softAssert.assertEquals(responseDto.getQuantity(), request.getQuantity());
@@ -67,7 +80,7 @@ public class PostPlaceOrderTests extends BaseTest {
     @Test
     public void Store_Post_PlaceOrder_Success_PlacedStatus() {
         PlaceOrderRequestResponse request = PlaceOrderDF.getData();
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(request)
@@ -78,7 +91,7 @@ public class PostPlaceOrderTests extends BaseTest {
                 .extract().response();
 
         PlaceOrderRequestResponse responseDto = response.as(PlaceOrderRequestResponse.class);
-        
+
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(responseDto.getStatus(), "placed");
         softAssert.assertAll();
@@ -88,7 +101,7 @@ public class PostPlaceOrderTests extends BaseTest {
     public void Store_Post_PlaceOrder_Success_ApprovedStatus() {
         PlaceOrderRequestResponse request = PlaceOrderDF.getData();
         request.setStatus("approved");
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(request)
@@ -99,7 +112,7 @@ public class PostPlaceOrderTests extends BaseTest {
                 .extract().response();
 
         PlaceOrderRequestResponse responseDto = response.as(PlaceOrderRequestResponse.class);
-        
+
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(responseDto.getStatus(), "approved");
         softAssert.assertAll();
@@ -110,7 +123,7 @@ public class PostPlaceOrderTests extends BaseTest {
         PlaceOrderRequestResponse request = PlaceOrderDF.getData();
         request.setStatus("delivered");
         request.setComplete(true);
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(request)
@@ -121,7 +134,7 @@ public class PostPlaceOrderTests extends BaseTest {
                 .extract().response();
 
         PlaceOrderRequestResponse responseDto = response.as(PlaceOrderRequestResponse.class);
-        
+
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(responseDto.getStatus(), "delivered");
         softAssert.assertEquals(responseDto.getComplete().booleanValue(), true);
@@ -133,7 +146,7 @@ public class PostPlaceOrderTests extends BaseTest {
         PlaceOrderRequestResponse request = PlaceOrderDF.getData();
         request.setPetId(null);
         request.setQuantity(faker.number().numberBetween(1, 10));
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(request)
@@ -148,7 +161,7 @@ public class PostPlaceOrderTests extends BaseTest {
     public void Store_Post_PlaceOrder_BadRequest_MissingQuantity() {
         PlaceOrderRequestResponse request = PlaceOrderDF.getData();
         request.setPetId(faker.number().numberBetween(1L, 1000L));
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(request)
@@ -163,7 +176,7 @@ public class PostPlaceOrderTests extends BaseTest {
     public void Store_Post_PlaceOrder_BadRequest_InvalidStatus() {
         PlaceOrderRequestResponse request = PlaceOrderDF.getData();
         request.setStatus("invalid_status");
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(request)
@@ -178,7 +191,7 @@ public class PostPlaceOrderTests extends BaseTest {
     public void Store_Post_PlaceOrder_BadRequest_NegativeQuantity() {
         PlaceOrderRequestResponse request = PlaceOrderDF.getData();
         request.setQuantity(-1);
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(request)
@@ -193,7 +206,7 @@ public class PostPlaceOrderTests extends BaseTest {
     public void Store_Post_PlaceOrder_Success_FutureShipDate() {
         PlaceOrderRequestResponse request = PlaceOrderDF.getData();
         request.setShipDate(java.time.LocalDateTime.now().plusDays(7).format(java.time.format.DateTimeFormatter.ISO_DATE_TIME));
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(request)
@@ -204,7 +217,7 @@ public class PostPlaceOrderTests extends BaseTest {
                 .extract().response();
 
         PlaceOrderRequestResponse responseDto = response.as(PlaceOrderRequestResponse.class);
-        
+
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(responseDto.getPetId(), request.getPetId());
         softAssert.assertEquals(responseDto.getQuantity(), request.getQuantity());

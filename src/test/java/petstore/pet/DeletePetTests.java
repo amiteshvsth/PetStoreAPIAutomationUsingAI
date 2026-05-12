@@ -4,18 +4,31 @@ import base.BaseTest;
 import dataFactory.pet.addPet.AddPetDF;
 import dataObjects.pet.addPet.AddPetRequestResponse;
 import io.restassured.response.Response;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import utilities.ApiEndPoints;
+import utilities.ApiHelpers;
 
 import static io.restassured.RestAssured.given;
 
 public class DeletePetTests extends BaseTest {
 
+    @BeforeClass()
+    public void beforeTest() {
+        ApiHelpers.setBaseUri(ApiEndPoints.PETSTORE_BASE_URL);
+    }
+
+    @AfterClass()
+    public void afterClass() {
+        ApiHelpers.clearBaseUri();
+    }
+
     @Test
     public void Pet_Delete_Pet_Success_ValidExistingId() {
         AddPetRequestResponse createPet = AddPetDF.getData();
-        
+
         Response createResponse = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(createPet)
@@ -26,7 +39,7 @@ public class DeletePetTests extends BaseTest {
                 .extract().response();
 
         AddPetRequestResponse createdPet = createResponse.as(AddPetRequestResponse.class);
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("petId", createdPet.getId())
@@ -44,7 +57,7 @@ public class DeletePetTests extends BaseTest {
     @Test
     public void Pet_Delete_Pet_NotFound_NonExistentId() {
         AddPetRequestResponse createPet = AddPetDF.getData();
-        
+
         Response createResponse = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(createPet)
@@ -55,7 +68,7 @@ public class DeletePetTests extends BaseTest {
                 .extract().response();
 
         AddPetRequestResponse createdPet = createResponse.as(AddPetRequestResponse.class);
-        
+
         given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("petId", createdPet.getId())
@@ -63,7 +76,7 @@ public class DeletePetTests extends BaseTest {
                 .delete(ApiEndPoints.PET_DELETE_PET)
                 .then()
                 .statusCode(200);
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("petId", createdPet.getId())
@@ -89,7 +102,7 @@ public class DeletePetTests extends BaseTest {
     @Test
     public void Pet_Delete_Pet_Unauthorized_MissingApiKeyHeader() {
         AddPetRequestResponse createPet = AddPetDF.getData();
-        
+
         Response createResponse = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(createPet)
@@ -100,7 +113,7 @@ public class DeletePetTests extends BaseTest {
                 .extract().response();
 
         AddPetRequestResponse createdPet = createResponse.as(AddPetRequestResponse.class);
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .header("api_key", "")
@@ -115,7 +128,7 @@ public class DeletePetTests extends BaseTest {
     @Test
     public void Pet_Delete_Pet_Unauthorized() {
         AddPetRequestResponse createPet = AddPetDF.getData();
-        
+
         Response createResponse = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(createPet)
@@ -126,7 +139,7 @@ public class DeletePetTests extends BaseTest {
                 .extract().response();
 
         AddPetRequestResponse createdPet = createResponse.as(AddPetRequestResponse.class);
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .header("Authorization", "Bearer invalid_token")

@@ -2,24 +2,37 @@ package petstore.workflows;
 
 import base.BaseTest;
 import dataFactory.pet.addPet.AddPetDF;
-import dataObjects.pet.addPet.AddPetRequestResponse;
 import dataFactory.store.placeOrder.PlaceOrderDF;
-import dataObjects.store.placeOrder.PlaceOrderRequestResponse;
 import dataFactory.user.createUser.CreateUserDF;
+import dataObjects.pet.addPet.AddPetRequestResponse;
+import dataObjects.store.placeOrder.PlaceOrderRequestResponse;
 import dataObjects.user.createUser.CreateUserRequest;
 import io.restassured.response.Response;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import utilities.ApiEndPoints;
+import utilities.ApiHelpers;
 
 import static io.restassured.RestAssured.given;
 
 public class DataConsistencyWorkflowTests extends BaseTest {
 
+    @BeforeClass()
+    public void beforeTest() {
+        ApiHelpers.setBaseUri(ApiEndPoints.PETSTORE_BASE_URL);
+    }
+
+    @AfterClass()
+    public void afterClass() {
+        ApiHelpers.clearBaseUri();
+    }
+
     @Test
     public void Workflow_DataConsistency_OrderForNonExistentPet_BadRequest() {
         AddPetRequestResponse createPet = AddPetDF.getData();
-        
+
         Response petResponse = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(createPet)
@@ -30,7 +43,7 @@ public class DataConsistencyWorkflowTests extends BaseTest {
                 .extract().response();
 
         AddPetRequestResponse createdPet = petResponse.as(AddPetRequestResponse.class);
-        
+
         given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("petId", createdPet.getId())
@@ -38,10 +51,10 @@ public class DataConsistencyWorkflowTests extends BaseTest {
                 .delete(ApiEndPoints.PET_DELETE_PET)
                 .then()
                 .statusCode(200);
-        
+
         PlaceOrderRequestResponse order = PlaceOrderDF.getData();
         order.setPetId(createdPet.getId());
-        
+
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(order)
@@ -114,7 +127,7 @@ public class DataConsistencyWorkflowTests extends BaseTest {
     @Test
     public void Workflow_DataConsistency_UpdateUserReferencedInOrders_Success() {
         CreateUserRequest createUser = CreateUserDF.getData();
-        
+
         given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(createUser)
@@ -124,7 +137,7 @@ public class DataConsistencyWorkflowTests extends BaseTest {
                 .statusCode(200);
 
         PlaceOrderRequestResponse order = PlaceOrderDF.getData();
-        
+
         Response orderResponse = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(order)
@@ -135,10 +148,10 @@ public class DataConsistencyWorkflowTests extends BaseTest {
                 .extract().response();
 
         PlaceOrderRequestResponse createdOrder = orderResponse.as(PlaceOrderRequestResponse.class);
-        
+
         CreateUserRequest updateUser = CreateUserDF.getData();
         updateUser.setEmail("updated.email@example.com");
-        
+
         Response updateUserResponse = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("username", createUser.getUsername())
@@ -169,7 +182,7 @@ public class DataConsistencyWorkflowTests extends BaseTest {
     public void Workflow_DataConsistency_ConcurrentPetOperations_Success() {
         AddPetRequestResponse pet1 = AddPetDF.getData();
         AddPetRequestResponse pet2 = AddPetDF.getData();
-        
+
         Response response1 = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(pet1)
@@ -190,7 +203,7 @@ public class DataConsistencyWorkflowTests extends BaseTest {
 
         AddPetRequestResponse createdPet1 = response1.as(AddPetRequestResponse.class);
         AddPetRequestResponse createdPet2 = response2.as(AddPetRequestResponse.class);
-        
+
         Response findByStatusResponse = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .queryParam("status", "available")
@@ -200,8 +213,8 @@ public class DataConsistencyWorkflowTests extends BaseTest {
                 .statusCode(200)
                 .extract().response();
 
-        java.util.List<dataObjects.pet.findPetsByStatus.FindPetsByStatusResponse> pets = 
-            findByStatusResponse.jsonPath().getList("", dataObjects.pet.findPetsByStatus.FindPetsByStatusResponse.class);
+        java.util.List<dataObjects.pet.findPetsByStatus.FindPetsByStatusResponse> pets =
+                findByStatusResponse.jsonPath().getList("", dataObjects.pet.findPetsByStatus.FindPetsByStatusResponse.class);
 
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertNotNull(createdPet1.getId());
