@@ -11,9 +11,10 @@
 
     <properties>
         <!-- Java -->
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <release.plugin.version>21</release.plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compliler.plugin.version>3.13.0</maven.compliler.plugin.version>
+        <maven.surefire.version>3.5.0</maven.surefire.version>
 
         <!-- Core Dependency Versions -->
         <jackson.version>2.18.7</jackson.version> <!-- Fixes GHSA-72hv-8253-57qq -->
@@ -115,10 +116,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
+                <version>${maven.compliler.plugin.version}</version>
                 <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
+                    <release>${release.plugin.version}</release>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
@@ -132,7 +132,17 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.0</version>
+                <version>${maven.surefire.version}</version>
+                <configuration>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>testng.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>${maven.surefire.version}</version>
             </plugin>
         </plugins>
     </build>

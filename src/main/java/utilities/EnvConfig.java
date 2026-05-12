@@ -9,6 +9,11 @@ public final class EnvConfig {
     private EnvConfig() {}
 
     public static String get(String key) {
+        String envValue = System.getenv(key);
+
+        if (envValue != null && !envValue.isBlank()) {
+            return envValue;
+        }
         return dotenv.get(key);
     }
 
