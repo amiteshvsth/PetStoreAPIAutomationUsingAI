@@ -3,6 +3,7 @@ package petstore.pet;
 import base.BaseTest;
 import dataFactory.pet.addPet.AddPetDF;
 import dataObjects.pet.addPet.AddPetRequestResponse;
+import dataObjects.pet.deletePet.DeletePetResponse;
 import io.restassured.response.Response;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -17,7 +18,7 @@ public class DeletePetTests extends BaseTest {
 
     @BeforeClass()
     public void beforeTest() {
-        ApiHelpers.setBaseUri(ApiEndPoints.PETSTORE_BASE_URL);
+        ApiHelpers.setBaseUri(ApiEndPoints.PET_STORE_BASE_URL);
     }
 
     @AfterClass()
@@ -49,8 +50,11 @@ public class DeletePetTests extends BaseTest {
                 .statusCode(200)
                 .extract().response();
 
+        DeletePetResponse deletePet = response.as(DeletePetResponse.class);
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(response.statusCode(), 200);
+        softAssert.assertEquals(deletePet.getCode(), 200);
+        softAssert.assertEquals(deletePet.getType(), "unknown");
+        softAssert.assertEquals(deletePet.getMessage(), createdPet.getId().toString());
         softAssert.assertAll();
     }
 
@@ -77,7 +81,7 @@ public class DeletePetTests extends BaseTest {
                 .then()
                 .statusCode(200);
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("petId", createdPet.getId())
                 .when()
@@ -89,7 +93,7 @@ public class DeletePetTests extends BaseTest {
 
     @Test
     public void Pet_Delete_Pet_BadRequest_InvalidIdFormat() {
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("petId", "invalid")
                 .when()
@@ -114,9 +118,8 @@ public class DeletePetTests extends BaseTest {
 
         AddPetRequestResponse createdPet = createResponse.as(AddPetRequestResponse.class);
 
-        Response response = given()
-                .spec(apiHelpers.requestSpecificationWithJSONHeader())
-                .header("api_key", "")
+        given()
+                .spec(apiHelpers.requestSpecificationWithApiKeyAuthentication(""))
                 .pathParam("petId", createdPet.getId())
                 .when()
                 .delete(ApiEndPoints.PET_DELETE_PET)
@@ -140,7 +143,7 @@ public class DeletePetTests extends BaseTest {
 
         AddPetRequestResponse createdPet = createResponse.as(AddPetRequestResponse.class);
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .header("Authorization", "Bearer invalid_token")
                 .pathParam("petId", createdPet.getId())

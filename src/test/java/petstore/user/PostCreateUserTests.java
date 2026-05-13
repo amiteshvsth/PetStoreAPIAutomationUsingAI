@@ -3,6 +3,7 @@ package petstore.user;
 import base.BaseTest;
 import dataFactory.user.createUser.CreateUserDF;
 import dataObjects.user.createUser.CreateUserRequest;
+import dataObjects.user.createUser.CreateUserResponse;
 import io.restassured.response.Response;
 import net.datafaker.Faker;
 import org.testng.annotations.AfterClass;
@@ -19,7 +20,7 @@ public class PostCreateUserTests extends BaseTest {
 
     @BeforeClass()
     public void beforeTest() {
-        ApiHelpers.setBaseUri(ApiEndPoints.PETSTORE_BASE_URL);
+        ApiHelpers.setBaseUri(ApiEndPoints.PET_STORE_BASE_URL);
     }
 
     @AfterClass()
@@ -40,8 +41,13 @@ public class PostCreateUserTests extends BaseTest {
                 .statusCode(200)
                 .extract().response();
 
+        CreateUserResponse createUserResponse = response.as(CreateUserResponse.class);
+
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(response.statusCode(), 200);
+        softAssert.assertEquals(createUserResponse.getCode(), 200);
+        softAssert.assertEquals(createUserResponse.getType(), "unknown");
+        softAssert.assertEquals(createUserResponse.getMessage(), request.getId().toString());
+
         softAssert.assertAll();
     }
 
@@ -65,13 +71,18 @@ public class PostCreateUserTests extends BaseTest {
                 .statusCode(200)
                 .extract().response();
 
+        CreateUserResponse createUserResponse = response.as(CreateUserResponse.class);
+
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(response.statusCode(), 200);
+        softAssert.assertEquals(createUserResponse.getCode(), 200);
+        softAssert.assertEquals(createUserResponse.getType(), "unknown");
+        softAssert.assertEquals(createUserResponse.getMessage(), request.getId().toString());
+
         softAssert.assertAll();
     }
 
     @Test
-    public void User_Post_CreateUser_Success_DuplicateUsername() {
+    public void User_Post_CreateUser_BadRequest_DuplicateUsername() {
         CreateUserRequest originalUser = CreateUserDF.getData();
 
         given()
@@ -85,18 +96,14 @@ public class PostCreateUserTests extends BaseTest {
         CreateUserRequest duplicateUser = CreateUserDF.getData();
         duplicateUser.setUsername(originalUser.getUsername());
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(duplicateUser)
                 .when()
                 .post(ApiEndPoints.USER_POST_CREATE_USER)
                 .then()
-                .statusCode(200)
+                .statusCode(400)
                 .extract().response();
-
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(response.statusCode(), 200);
-        softAssert.assertAll();
     }
 
     @Test
@@ -104,7 +111,7 @@ public class PostCreateUserTests extends BaseTest {
         CreateUserRequest request = CreateUserDF.getData();
         request.setEmail("invalid-email-format");
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(request)
                 .when()
@@ -128,8 +135,13 @@ public class PostCreateUserTests extends BaseTest {
                 .statusCode(200)
                 .extract().response();
 
+        CreateUserResponse createUserResponse = response.as(CreateUserResponse.class);
+
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(response.statusCode(), 200);
+        softAssert.assertEquals(createUserResponse.getCode(), 200);
+        softAssert.assertEquals(createUserResponse.getType(), "unknown");
+        softAssert.assertEquals(createUserResponse.getMessage(), request.getId().toString());
+
         softAssert.assertAll();
     }
 
@@ -147,14 +159,20 @@ public class PostCreateUserTests extends BaseTest {
                 .statusCode(200)
                 .extract().response();
 
+        CreateUserResponse createUserResponse = response.as(CreateUserResponse.class);
+
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(response.statusCode(), 200);
+        softAssert.assertEquals(createUserResponse.getCode(), 200);
+        softAssert.assertEquals(createUserResponse.getType(), "unknown");
+        softAssert.assertEquals(createUserResponse.getMessage(), request.getId().toString());
+
         softAssert.assertAll();
     }
 
     @Test
     public void User_Post_CreateUser_Success_NullOptionalFields() {
-        CreateUserRequest request = CreateUserDF.getWithNullOptionalFields();
+        CreateUserRequest request = new CreateUserRequest();
+        request.setUsername(faker.name().fullName());
 
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
@@ -165,8 +183,13 @@ public class PostCreateUserTests extends BaseTest {
                 .statusCode(200)
                 .extract().response();
 
+        CreateUserResponse createUserResponse = response.as(CreateUserResponse.class);
+
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(response.statusCode(), 200);
+        softAssert.assertEquals(createUserResponse.getCode(), 200);
+        softAssert.assertEquals(createUserResponse.getType(), "unknown");
+        softAssert.assertEquals(createUserResponse.getMessage(), request.getId().toString());
+
         softAssert.assertAll();
     }
 }

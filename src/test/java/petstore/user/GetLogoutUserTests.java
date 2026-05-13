@@ -1,6 +1,7 @@
 package petstore.user;
 
 import base.BaseTest;
+import dataObjects.user.logoutUser.LogoutUserResponse;
 import io.restassured.response.Response;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -15,7 +16,7 @@ public class GetLogoutUserTests extends BaseTest {
 
     @BeforeClass()
     public void beforeTest() {
-        ApiHelpers.setBaseUri(ApiEndPoints.PETSTORE_BASE_URL);
+        ApiHelpers.setBaseUri(ApiEndPoints.PET_STORE_BASE_URL);
     }
 
     @AfterClass()
@@ -33,8 +34,12 @@ public class GetLogoutUserTests extends BaseTest {
                 .statusCode(200)
                 .extract().response();
 
+        LogoutUserResponse logoutUserResponse = response.as(LogoutUserResponse.class);
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(response.statusCode(), 200);
+        softAssert.assertEquals(logoutUserResponse.getCode(), 200);
+        softAssert.assertEquals(logoutUserResponse.getType(), "unknown");
+        softAssert.assertEquals(logoutUserResponse.getMessage(), "ok");
+
         softAssert.assertAll();
     }
 
@@ -48,8 +53,12 @@ public class GetLogoutUserTests extends BaseTest {
                 .statusCode(200)
                 .extract().response();
 
+        LogoutUserResponse logoutUserResponse = response.as(LogoutUserResponse.class);
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(response.statusCode(), 200);
+        softAssert.assertEquals(logoutUserResponse.getCode(), 200);
+        softAssert.assertEquals(logoutUserResponse.getType(), "unknown");
+        softAssert.assertEquals(logoutUserResponse.getMessage(), "ok");
+
         softAssert.assertAll();
     }
 }

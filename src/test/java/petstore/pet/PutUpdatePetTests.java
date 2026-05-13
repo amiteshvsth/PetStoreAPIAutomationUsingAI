@@ -13,13 +13,15 @@ import org.testng.asserts.SoftAssert;
 import utilities.ApiEndPoints;
 import utilities.ApiHelpers;
 
+import java.util.HashSet;
+
 import static io.restassured.RestAssured.given;
 
 public class PutUpdatePetTests extends BaseTest {
 
     @BeforeClass()
     public void beforeTest() {
-        ApiHelpers.setBaseUri(ApiEndPoints.PETSTORE_BASE_URL);
+        ApiHelpers.setBaseUri(ApiEndPoints.PET_STORE_BASE_URL);
     }
 
     @AfterClass()
@@ -51,12 +53,18 @@ public class PutUpdatePetTests extends BaseTest {
                 .statusCode(200)
                 .extract().response();
 
-        AddPetRequestResponse responseDto = response.as(AddPetRequestResponse.class);
+        UpdatePetRequestResponse responseDto = response.as(UpdatePetRequestResponse.class);
 
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(responseDto.getId(), updatePet.getId());
         softAssert.assertEquals(responseDto.getName(), updatePet.getName());
         softAssert.assertEquals(responseDto.getStatus(), updatePet.getStatus());
+        softAssert.assertEquals(responseDto.getPhotoUrls(), updatePet.getPhotoUrls());
+        // Assert nested category data inline
+        softAssert.assertEquals(responseDto.getCategory().getId(), updatePet.getCategory().getId());
+        softAssert.assertEquals(responseDto.getCategory().getName(), updatePet.getCategory().getName());
+        // Assert nested tags data inline
+        softAssert.assertEquals(new HashSet<>(responseDto.getTags()), new HashSet<>(updatePet.getTags()));
         softAssert.assertAll();
     }
 
@@ -86,7 +94,7 @@ public class PutUpdatePetTests extends BaseTest {
                 .statusCode(200)
                 .extract().response();
 
-        AddPetRequestResponse responseDto = response.as(AddPetRequestResponse.class);
+        UpdatePetRequestResponse responseDto = response.as(UpdatePetRequestResponse.class);
 
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(responseDto.getId(), updatePet.getId());
@@ -119,7 +127,7 @@ public class PutUpdatePetTests extends BaseTest {
                 .statusCode(200)
                 .extract().response();
 
-        AddPetRequestResponse responseDto = response.as(AddPetRequestResponse.class);
+        UpdatePetRequestResponse responseDto = response.as(UpdatePetRequestResponse.class);
 
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(responseDto.getId(), updatePet.getId());
@@ -153,7 +161,7 @@ public class PutUpdatePetTests extends BaseTest {
         UpdatePetRequestResponse updatePet = UpdatePetDF.getData();
         updatePet.setId(createdPet.getId());
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(updatePet)
                 .when()
@@ -168,7 +176,7 @@ public class PutUpdatePetTests extends BaseTest {
         UpdatePetRequestResponse updatePet = UpdatePetDF.getData();
         updatePet.setId(null);
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(updatePet)
                 .when()
@@ -194,7 +202,7 @@ public class PutUpdatePetTests extends BaseTest {
         updatePet.setId(createPet.getId());
         updatePet.setStatus("invalid_status");
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(updatePet)
                 .when()
@@ -208,7 +216,7 @@ public class PutUpdatePetTests extends BaseTest {
     public void Pet_Put_UpdatePet_Unauthorized() {
         UpdatePetRequestResponse updatePet = UpdatePetDF.getData();
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .header("Authorization", "Bearer invalid_token")
                 .body(updatePet)

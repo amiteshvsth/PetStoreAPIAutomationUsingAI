@@ -11,8 +11,12 @@ import java.util.List;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "status"
+        "status"
 })
 public class FindPetsByStatusRequest {
     private List<String> status;
+
+    public String getStatusAsQueryParam() {
+        return String.join(",", status);
+    }
 }

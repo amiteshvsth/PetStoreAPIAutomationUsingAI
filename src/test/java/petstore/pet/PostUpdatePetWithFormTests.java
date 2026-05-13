@@ -2,7 +2,10 @@ package petstore.pet;
 
 import base.BaseTest;
 import dataFactory.pet.addPet.AddPetDF;
+import dataFactory.pet.updatePetWithForm.UpdatePetWithFormDF;
 import dataObjects.pet.addPet.AddPetRequestResponse;
+import dataObjects.pet.updatePetWithForm.UpdatePetWithFormRequest;
+import dataObjects.pet.updatePetWithForm.UpdatePetWithFormResponse;
 import io.restassured.response.Response;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -19,7 +22,7 @@ public class PostUpdatePetWithFormTests extends BaseTest {
 
     @BeforeClass()
     public void beforeTest() {
-        ApiHelpers.setBaseUri(ApiEndPoints.PETSTORE_BASE_URL);
+        ApiHelpers.setBaseUri(ApiEndPoints.PET_STORE_BASE_URL);
     }
 
     @AfterClass()
@@ -42,23 +45,23 @@ public class PostUpdatePetWithFormTests extends BaseTest {
 
         AddPetRequestResponse createdPet = createResponse.as(AddPetRequestResponse.class);
 
-        Map<String, Object> formData = Map.of(
-                "name", "UpdatedPetName",
-                "status", "sold"
-        );
+        UpdatePetWithFormRequest request = UpdatePetWithFormDF.getData();
 
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithFormUrlEncoded())
                 .pathParam("petId", createdPet.getId())
-                .formParams(formData)
-                .when()
+                .formParam("name", request.getName())
+                .formParam("status", request.getStatus()).when()
                 .post(ApiEndPoints.PET_POST_UPDATE_PET_FORM)
                 .then()
                 .statusCode(200)
                 .extract().response();
 
+        UpdatePetWithFormResponse updatePetWithFormResponse = response.as(UpdatePetWithFormResponse.class);
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(response.statusCode(), 200);
+        softAssert.assertEquals(updatePetWithFormResponse.getCode(), 200);
+        softAssert.assertEquals(updatePetWithFormResponse.getType(), "unknown");
+        softAssert.assertEquals(updatePetWithFormResponse.getMessage(), request.getId().toString());
         softAssert.assertAll();
     }
 
@@ -77,20 +80,24 @@ public class PostUpdatePetWithFormTests extends BaseTest {
 
         AddPetRequestResponse createdPet = createResponse.as(AddPetRequestResponse.class);
 
-        Map<String, Object> formData = Map.of("name", "UpdatedPetNameOnly");
+        UpdatePetWithFormRequest request = UpdatePetWithFormDF.getData();
+        request.setStatus(null);
 
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithFormUrlEncoded())
                 .pathParam("petId", createdPet.getId())
-                .formParams(formData)
+                .formParams("name", request.getName())
                 .when()
                 .post(ApiEndPoints.PET_POST_UPDATE_PET_FORM)
                 .then()
                 .statusCode(200)
                 .extract().response();
 
+        UpdatePetWithFormResponse updatePetWithFormResponse = response.as(UpdatePetWithFormResponse.class);
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(response.statusCode(), 200);
+        softAssert.assertEquals(updatePetWithFormResponse.getCode(), 200);
+        softAssert.assertEquals(updatePetWithFormResponse.getType(), "unknown");
+        softAssert.assertEquals(updatePetWithFormResponse.getMessage(), request.getId().toString());
         softAssert.assertAll();
     }
 
@@ -109,20 +116,24 @@ public class PostUpdatePetWithFormTests extends BaseTest {
 
         AddPetRequestResponse createdPet = createResponse.as(AddPetRequestResponse.class);
 
-        Map<String, Object> formData = Map.of("status", "pending");
+        UpdatePetWithFormRequest request = UpdatePetWithFormDF.getData();
+        request.setName(null);
 
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithFormUrlEncoded())
                 .pathParam("petId", createdPet.getId())
-                .formParams(formData)
+                .formParams("status", request.getStatus())
                 .when()
                 .post(ApiEndPoints.PET_POST_UPDATE_PET_FORM)
                 .then()
                 .statusCode(200)
                 .extract().response();
 
+        UpdatePetWithFormResponse updatePetWithFormResponse = response.as(UpdatePetWithFormResponse.class);
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(response.statusCode(), 200);
+        softAssert.assertEquals(updatePetWithFormResponse.getCode(), 200);
+        softAssert.assertEquals(updatePetWithFormResponse.getType(), "unknown");
+        softAssert.assertEquals(updatePetWithFormResponse.getMessage(), request.getId().toString());
         softAssert.assertAll();
     }
 
@@ -156,8 +167,11 @@ public class PostUpdatePetWithFormTests extends BaseTest {
                 .statusCode(200)
                 .extract().response();
 
+        UpdatePetWithFormResponse updatePetWithFormResponse = response.as(UpdatePetWithFormResponse.class);
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(response.statusCode(), 200);
+        softAssert.assertEquals(updatePetWithFormResponse.getCode(), 200);
+        softAssert.assertEquals(updatePetWithFormResponse.getType(), "unknown");
+        softAssert.assertEquals(updatePetWithFormResponse.getMessage(), createdPet.getId().toString());
         softAssert.assertAll();
     }
 
@@ -184,33 +198,37 @@ public class PostUpdatePetWithFormTests extends BaseTest {
                 .then()
                 .statusCode(200);
 
-        Map<String, Object> formData = Map.of(
-                "name", "UpdatedPetName",
-                "status", "sold"
-        );
+        UpdatePetWithFormRequest request = UpdatePetWithFormDF.getData();
 
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithFormUrlEncoded())
                 .pathParam("petId", createdPet.getId())
-                .formParams(formData)
+                .formParams("name", request.getName())
+                .formParams("status", request.getStatus())
                 .when()
                 .post(ApiEndPoints.PET_POST_UPDATE_PET_FORM)
                 .then()
                 .statusCode(404)
                 .extract().response();
+
+        UpdatePetWithFormResponse updatePetWithFormResponse = response.as(UpdatePetWithFormResponse.class);
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(updatePetWithFormResponse.getCode(), 404);
+        softAssert.assertEquals(updatePetWithFormResponse.getType(), "unknown");
+        softAssert.assertEquals(updatePetWithFormResponse.getMessage(), "not found");
+        softAssert.assertAll();
     }
 
     @Test
     public void Pet_Post_UpdatePetWithForm_BadRequest_InvalidIdFormat() {
-        Map<String, Object> formData = Map.of(
-                "name", "UpdatedPetName",
-                "status", "sold"
-        );
 
-        Response response = given()
+        UpdatePetWithFormRequest request = UpdatePetWithFormDF.getData();
+
+        given()
                 .spec(apiHelpers.requestSpecificationWithFormUrlEncoded())
                 .pathParam("petId", "invalid")
-                .formParams(formData)
+                .formParams("name", request.getName())
+                .formParams("status", request.getStatus())
                 .when()
                 .post(ApiEndPoints.PET_POST_UPDATE_PET_FORM)
                 .then()
@@ -238,9 +256,8 @@ public class PostUpdatePetWithFormTests extends BaseTest {
                 "status", "sold"
         );
 
-        Response response = given()
-                .spec(apiHelpers.requestSpecificationWithFormUrlEncoded())
-                .header("Authorization", "Bearer invalid_token")
+        given()
+                .spec(apiHelpers.requestSpecificationWithCustomHeader("Authorization", "Bearer invalid_token"))
                 .pathParam("petId", createdPet.getId())
                 .formParams(formData)
                 .when()

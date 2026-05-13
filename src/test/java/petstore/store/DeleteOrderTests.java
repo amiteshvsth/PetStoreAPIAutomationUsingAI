@@ -2,6 +2,7 @@ package petstore.store;
 
 import base.BaseTest;
 import dataFactory.store.placeOrder.PlaceOrderDF;
+import dataObjects.store.deleteOrder.DeleteOrderResponse;
 import dataObjects.store.placeOrder.PlaceOrderRequestResponse;
 import io.restassured.response.Response;
 import org.testng.annotations.AfterClass;
@@ -17,7 +18,7 @@ public class DeleteOrderTests extends BaseTest {
 
     @BeforeClass()
     public void beforeTest() {
-        ApiHelpers.setBaseUri(ApiEndPoints.PETSTORE_BASE_URL);
+        ApiHelpers.setBaseUri(ApiEndPoints.PET_STORE_BASE_URL);
     }
 
     @AfterClass()
@@ -49,15 +50,21 @@ public class DeleteOrderTests extends BaseTest {
                 .statusCode(200)
                 .extract().response();
 
+        DeleteOrderResponse deleteOrderResponse = response.as(DeleteOrderResponse.class);
+
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(response.statusCode(), 200);
+        softAssert.assertEquals(deleteOrderResponse.getCode(), 200);
+        softAssert.assertEquals(deleteOrderResponse.getType(), "unknown");
+        softAssert.assertEquals(deleteOrderResponse.getMessage(), createdOrder.getId().toString());
+
         softAssert.assertAll();
     }
 
+
     @Test
-    public void Store_Delete_Order_Success_MinimumBoundary() {
+    public void Store_Delete_Order_NotFound_NonExistentId() {
+
         PlaceOrderRequestResponse createOrder = PlaceOrderDF.getData();
-        createOrder.setId(1L);
 
         Response createResponse = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
@@ -70,7 +77,7 @@ public class DeleteOrderTests extends BaseTest {
 
         PlaceOrderRequestResponse createdOrder = createResponse.as(PlaceOrderRequestResponse.class);
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("orderId", createdOrder.getId())
                 .when()
@@ -79,18 +86,9 @@ public class DeleteOrderTests extends BaseTest {
                 .statusCode(200)
                 .extract().response();
 
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(response.statusCode(), 200);
-        softAssert.assertAll();
-    }
-
-    @Test
-    public void Store_Delete_Order_NotFound_NonExistentId() {
-        Long nonExistentId = 99999L;
-
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
-                .pathParam("orderId", nonExistentId)
+                .pathParam("orderId", createdOrder.getId())
                 .when()
                 .delete(ApiEndPoints.STORE_DELETE_ORDER)
                 .then()
@@ -102,7 +100,7 @@ public class DeleteOrderTests extends BaseTest {
     public void Store_Delete_Order_BadRequest_NegativeId() {
         Long negativeId = -1L;
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("orderId", negativeId)
                 .when()
@@ -116,7 +114,7 @@ public class DeleteOrderTests extends BaseTest {
     public void Store_Delete_Order_BadRequest_ZeroId() {
         Long zeroId = 0L;
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("orderId", zeroId)
                 .when()
@@ -128,7 +126,7 @@ public class DeleteOrderTests extends BaseTest {
 
     @Test
     public void Store_Delete_Order_BadRequest_InvalidFormat() {
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("orderId", "invalid")
                 .when()

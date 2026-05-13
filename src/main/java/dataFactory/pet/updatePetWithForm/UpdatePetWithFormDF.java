@@ -1,9 +1,8 @@
 package dataFactory.pet.updatePetWithForm;
 
-import net.datafaker.Faker;
 import dataObjects.pet.updatePetWithForm.UpdatePetWithFormRequest;
+import net.datafaker.Faker;
 
-import java.util.Map;
 
 public class UpdatePetWithFormDF {
 

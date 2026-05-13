@@ -19,7 +19,7 @@ public class PostPlaceOrderTests extends BaseTest {
 
     @BeforeClass()
     public void beforeTest() {
-        ApiHelpers.setBaseUri(ApiEndPoints.PETSTORE_BASE_URL);
+        ApiHelpers.setBaseUri(ApiEndPoints.PET_STORE_BASE_URL);
     }
 
     @AfterClass()
@@ -147,7 +147,7 @@ public class PostPlaceOrderTests extends BaseTest {
         request.setPetId(null);
         request.setQuantity(faker.number().numberBetween(1, 10));
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(request)
                 .when()
@@ -162,7 +162,7 @@ public class PostPlaceOrderTests extends BaseTest {
         PlaceOrderRequestResponse request = PlaceOrderDF.getData();
         request.setPetId(faker.number().numberBetween(1L, 1000L));
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(request)
                 .when()
@@ -177,7 +177,7 @@ public class PostPlaceOrderTests extends BaseTest {
         PlaceOrderRequestResponse request = PlaceOrderDF.getData();
         request.setStatus("invalid_status");
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(request)
                 .when()
@@ -192,7 +192,7 @@ public class PostPlaceOrderTests extends BaseTest {
         PlaceOrderRequestResponse request = PlaceOrderDF.getData();
         request.setQuantity(-1);
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(request)
                 .when()

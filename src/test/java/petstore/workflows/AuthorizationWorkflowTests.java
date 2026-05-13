@@ -5,11 +5,9 @@ import dataFactory.pet.addPet.AddPetDF;
 import dataFactory.store.placeOrder.PlaceOrderDF;
 import dataObjects.pet.addPet.AddPetRequestResponse;
 import dataObjects.store.placeOrder.PlaceOrderRequestResponse;
-import io.restassured.response.Response;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
 import utilities.ApiEndPoints;
 import utilities.ApiHelpers;
 
@@ -19,7 +17,7 @@ public class AuthorizationWorkflowTests extends BaseTest {
 
     @BeforeClass()
     public void beforeTest() {
-        ApiHelpers.setBaseUri(ApiEndPoints.PETSTORE_BASE_URL);
+        ApiHelpers.setBaseUri(ApiEndPoints.PET_STORE_BASE_URL);
     }
 
     @AfterClass()
@@ -29,7 +27,7 @@ public class AuthorizationWorkflowTests extends BaseTest {
 
     @Test
     public void Workflow_Authorization_ValidApiKey_Success() {
-        Response inventoryResponse = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithApiKeyAuthentication("special-key"))
                 .when()
                 .get(ApiEndPoints.STORE_GET_INVENTORY)
@@ -37,15 +35,12 @@ public class AuthorizationWorkflowTests extends BaseTest {
                 .statusCode(200)
                 .extract().response();
 
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(inventoryResponse.statusCode(), 200);
-        softAssert.assertNotNull(inventoryResponse.jsonPath().getMap("$"));
-        softAssert.assertAll();
+
     }
 
     @Test
     public void Workflow_Authorization_MissingApiKey_Unauthorized() {
-        Response inventoryResponse = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .when()
                 .get(ApiEndPoints.STORE_GET_INVENTORY)
@@ -53,31 +48,25 @@ public class AuthorizationWorkflowTests extends BaseTest {
                 .statusCode(401)
                 .extract().response();
 
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(inventoryResponse.statusCode(), 401);
-        softAssert.assertAll();
+
     }
 
     @Test
     public void Workflow_Authorization_InvalidApiKey_Forbidden() {
-        Response inventoryResponse = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithApiKeyAuthentication("invalid-key"))
                 .when()
                 .get(ApiEndPoints.STORE_GET_INVENTORY)
                 .then()
                 .statusCode(403)
                 .extract().response();
-
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(inventoryResponse.statusCode(), 403);
-        softAssert.assertAll();
     }
 
     @Test
     public void Workflow_Authorization_PetEndpoints_Unauthorized_WithoutAuth() {
         AddPetRequestResponse pet = AddPetDF.getData();
 
-        Response createResponse = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .header("Authorization", "Bearer invalid_token")
                 .body(pet)
@@ -87,7 +76,7 @@ public class AuthorizationWorkflowTests extends BaseTest {
                 .statusCode(401)
                 .extract().response();
 
-        Response updateResponse = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .header("Authorization", "Bearer invalid_token")
                 .body(pet)
@@ -97,17 +86,13 @@ public class AuthorizationWorkflowTests extends BaseTest {
                 .statusCode(401)
                 .extract().response();
 
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(createResponse.statusCode(), 401);
-        softAssert.assertEquals(updateResponse.statusCode(), 401);
-        softAssert.assertAll();
     }
 
     @Test
     public void Workflow_Authorization_StoreEndpoints_Unauthorized_WithoutAuth() {
         PlaceOrderRequestResponse order = PlaceOrderDF.getData();
 
-        Response createOrderResponse = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .header("Authorization", "Bearer invalid_token")
                 .body(order)
@@ -117,8 +102,5 @@ public class AuthorizationWorkflowTests extends BaseTest {
                 .statusCode(401)
                 .extract().response();
 
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(createOrderResponse.statusCode(), 401);
-        softAssert.assertAll();
     }
 }

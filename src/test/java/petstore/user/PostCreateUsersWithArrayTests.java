@@ -11,15 +11,17 @@ import org.testng.asserts.SoftAssert;
 import utilities.ApiEndPoints;
 import utilities.ApiHelpers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
 public class PostCreateUsersWithArrayTests extends BaseTest {
 
+
     @BeforeClass()
     public void beforeTest() {
-        ApiHelpers.setBaseUri(ApiEndPoints.PETSTORE_BASE_URL);
+        ApiHelpers.setBaseUri(ApiEndPoints.PET_STORE_BASE_URL);
     }
 
     @AfterClass()
@@ -29,7 +31,9 @@ public class PostCreateUsersWithArrayTests extends BaseTest {
 
     @Test
     public void User_Post_CreateUsersWithArray_Success_ValidArray() {
-        List<CreateUsersWithArrayRequestResponse> request = CreateUsersWithArrayDF.getValidArray();
+        List<CreateUsersWithArrayRequestResponse> request = CreateUsersWithArrayDF.getData();
+        List<CreateUsersWithArrayRequestResponse> request2 = CreateUsersWithArrayDF.getData();
+        request.addAll(request2);
 
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
@@ -47,7 +51,7 @@ public class PostCreateUsersWithArrayTests extends BaseTest {
 
     @Test
     public void User_Post_CreateUsersWithArray_Success_EmptyArray() {
-        List<CreateUsersWithArrayRequestResponse> request = CreateUsersWithArrayDF.getEmptyArray();
+        List<CreateUsersWithArrayRequestResponse> request = new ArrayList<>();
 
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
@@ -65,9 +69,9 @@ public class PostCreateUsersWithArrayTests extends BaseTest {
 
     @Test
     public void User_Post_CreateUsersWithArray_BadRequest_NullArray() {
-        List<CreateUsersWithArrayRequestResponse> request = CreateUsersWithArrayDF.getNullArray();
+        List<CreateUsersWithArrayRequestResponse> request = null;
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(request)
                 .when()
@@ -79,9 +83,10 @@ public class PostCreateUsersWithArrayTests extends BaseTest {
 
     @Test
     public void User_Post_CreateUsersWithArray_BadRequest_ArrayWithInvalidUser() {
-        List<CreateUsersWithArrayRequestResponse> request = CreateUsersWithArrayDF.getArrayWithInvalidUser();
+        List<CreateUsersWithArrayRequestResponse> request = CreateUsersWithArrayDF.getData();
+        request.getFirst().setEmail("invalid-email-format");
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(request)
                 .when()
@@ -93,7 +98,7 @@ public class PostCreateUsersWithArrayTests extends BaseTest {
 
     @Test
     public void User_Post_CreateUsersWithArray_Success_SingleUserArray() {
-        List<CreateUsersWithArrayRequestResponse> request = CreateUsersWithArrayDF.getSingleUserArray();
+        List<CreateUsersWithArrayRequestResponse> request = CreateUsersWithArrayDF.getData();
 
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
@@ -111,7 +116,10 @@ public class PostCreateUsersWithArrayTests extends BaseTest {
 
     @Test
     public void User_Post_CreateUsersWithArray_Success_ArrayWithDuplicateUsernames() {
-        List<CreateUsersWithArrayRequestResponse> request = CreateUsersWithArrayDF.getArrayWithDuplicateUsernames();
+        List<CreateUsersWithArrayRequestResponse> request = CreateUsersWithArrayDF.getData();
+        List<CreateUsersWithArrayRequestResponse> request2 = CreateUsersWithArrayDF.getData();
+        request2.getFirst().setUsername(request.getFirst().getUsername());
+        request.addAll(request2);
 
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())

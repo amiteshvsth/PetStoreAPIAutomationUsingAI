@@ -1,44 +1,44 @@
 # API Test Automation Framework
 
-Automated REST API testing framework developed using Java, RestAssured, TestNG, and Maven for testing the Swagger Petstore APIs.
+Automated REST API testing framework developed using Java, RestAssured, TestNG, and Maven for testing the Swagger
+PetStore APIs.
 
 ---
 
 ## Overview
 
-This framework is designed for scalable and maintainable API automation testing of the Swagger Petstore application.
+This framework is designed for scalable and maintainable API automation testing of the Swagger PetStore application.
 
 Swagger URL:
 https://petstore.swagger.io/
 
 The framework supports:
+
 - REST API testing
 - CRUD operation validation
 - Request/response assertions
 - JSON serialization/deserialization
 - Retry mechanism for flaky APIs
-- Logging 
+- Logging
 - Parallel execution
 
 ---
 
 ## Versions
 
-| Tecnology   | Version | Purpose |
-|-------------|---------|--------|
-| Java        | 21 |Programming Language|
-| Maven       | 3.x |Dependency Management|
-| RestAssured | 5.3.0 |API Automation|
-| TestNG      | 7.8.0 |Test Framework|
-| Jackson     | 2.15.2 JSON Serialization/Deserialization|
-| Lombok      | 1.18.30 |DataObjects Getters and Setters|
-| SLF4J       | 1.7.36 |Logging |
-| DotEnv      | 5.2.2 | Environment File Configuration|
-| Faker       | 1.0.2 |Test Data Generation|
-
+| Tecnology   | Version                                   | Purpose                         |
+|-------------|-------------------------------------------|---------------------------------|
+| Java        | 21                                        | Programming Language            |
+| Maven       | 3.x                                       | Dependency Management           |
+| RestAssured | 5.3.0                                     | API Automation                  |
+| TestNG      | 7.8.0                                     | Test Framework                  |
+| Jackson     | 2.15.2 JSON Serialization/Deserialization |
+| Lombok      | 1.18.30                                   | DataObjects Getters and Setters |
+| SLF4J       | 1.7.36                                    | Logging                         |
+| DotEnv      | 5.2.2                                     | Environment File Configuration  |
+| Faker       | 1.0.2                                     | Test Data Generation            |
 
 ---
-
 
 ## Features
 
@@ -55,10 +55,11 @@ The framework supports:
 
 ## Application Under Test
 
-Swagger Petstore API:
+Swagger PetStore API:
 https://petstore.swagger.io/
 
 Modules Covered:
+
 - User APIs
 - Pet APIs
 - Store APIs
@@ -89,6 +90,7 @@ src
 │   │   │   ├── base
 │   │   │   ├── pet
 │   │   │   ├── store
+│   │   │   ├── workflows
 │   │   │   └── user
 ├── .env
 ├── .gitignore
@@ -172,6 +174,7 @@ mvn test -Dtest=UserApiTests#createUserTest
 ### BaseTest
 
 Handles:
+
 - Framework initialization
 - Common setup methods
 - Request/response logging configuration
@@ -179,12 +182,14 @@ Handles:
 ### ApiHelpers
 
 Reusable helper methods for:
+
 - GET
 - POST
 - PUT
 - DELETE
 
 Supports:
+
 - Headers
 - Query parameters
 - Path parameters
@@ -195,12 +200,14 @@ Supports:
 ### DataObject Models
 
 DataObject classes are used for:
+
 - Request payload creation
 - Response deserialization
 
 ### Constants
 
 Centralized constants for:
+
 - Status codes
 - Endpoints
 - Framework configuration
@@ -210,17 +217,17 @@ Centralized constants for:
 Reusable retry utility implemented for handling intermittent API failures.
 
 Features:
+
 - Configurable retry count
 - Configurable wait duration
 - Automatic retry on failed responses
-
-
 
 ---
 
 ## Request and Response Logging
 
 Automatic logging is enabled for :
+
 - Request URI
 - Headers
 - Payload
@@ -234,6 +241,7 @@ Failed validations automatically log complete request and response details for d
 ## Assertions Covered
 
 The framework validates:
+
 - Status codes
 - Response body
 - JSON schema
@@ -250,6 +258,7 @@ Parallel execution is supported using TestNG configuration.
 Example:
 
 ```xml
+
 <suite name="PetStore API Suite" parallel="classes" thread-count="4">
 </suite>
 ```
@@ -261,11 +270,13 @@ This improves execution speed during CI/CD runs.
 ## CI/CD Integration
 
 Framework can be integrated with:
+
 - Jenkins
 - GitHub Actions
 - Azure DevOps
 
 Supports:
+
 - Scheduled execution
 - Parallel execution
 
@@ -306,11 +317,14 @@ Developed for scalable and maintainable API automation testing using Java ecosys
 During framework development, the following challenges were encountered:
 
 ### 1. Retry Handling for Flaky APIs
+
 Some APIs returned intermittent failures or unstable responses.  
 A reusable retry mechanism was implemented using Java functional interfaces to automatically retry failed API calls.
 
 ### 2. Generic Request Handling
+
 Creating reusable API helper methods while supporting:
+
 - Headers
 - Query parameters
 - Path parameters
@@ -320,13 +334,18 @@ Creating reusable API helper methods while supporting:
 required careful abstraction to keep the framework flexible and maintainable.
 
 ### 3. Parallel Execution Stability
+
 Ensuring independent test execution during parallel runs required:
+
 - Proper test isolation
 - Avoiding shared mutable data
 - Dynamic test data generation
 
 ### 4. Logging and Debugging
-Capturing request and response details only for failed validations was implemented to improve debugging without cluttering logs.
+
+Capturing request and response details only for failed validations was implemented to improve debugging without
+cluttering logs.
 
 ### 5. Serialization and Deserialization
+
 Managing nested request/response payloads required proper POJO design using Jackson annotations and Lombok.

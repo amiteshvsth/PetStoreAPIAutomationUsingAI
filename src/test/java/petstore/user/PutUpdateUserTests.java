@@ -5,6 +5,7 @@ import dataFactory.user.createUser.CreateUserDF;
 import dataFactory.user.updateUser.UpdateUserDF;
 import dataObjects.user.createUser.CreateUserRequest;
 import dataObjects.user.updateUser.UpdateUserRequest;
+import dataObjects.user.updateUser.UpdateUserResponse;
 import io.restassured.response.Response;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -19,7 +20,7 @@ public class PutUpdateUserTests extends BaseTest {
 
     @BeforeClass()
     public void beforeTest() {
-        ApiHelpers.setBaseUri(ApiEndPoints.PETSTORE_BASE_URL);
+        ApiHelpers.setBaseUri(ApiEndPoints.PET_STORE_BASE_URL);
     }
 
     @AfterClass()
@@ -51,8 +52,12 @@ public class PutUpdateUserTests extends BaseTest {
                 .statusCode(200)
                 .extract().response();
 
+        UpdateUserResponse updateUserResponse = response.as(UpdateUserResponse.class);
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(response.statusCode(), 200);
+        softAssert.assertEquals(updateUserResponse.getCode(), 200);
+        softAssert.assertEquals(updateUserResponse.getType(), "unknown");
+        softAssert.assertNotNull(updateUserResponse.getMessage());
+
         softAssert.assertAll();
     }
 
@@ -81,8 +86,12 @@ public class PutUpdateUserTests extends BaseTest {
                 .statusCode(200)
                 .extract().response();
 
+        UpdateUserResponse updateUserResponse = response.as(UpdateUserResponse.class);
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(response.statusCode(), 200);
+        softAssert.assertEquals(updateUserResponse.getCode(), 200);
+        softAssert.assertEquals(updateUserResponse.getType(), "unknown");
+        softAssert.assertNotNull(updateUserResponse.getMessage());
+
         softAssert.assertAll();
     }
 
@@ -108,7 +117,7 @@ public class PutUpdateUserTests extends BaseTest {
 
         UpdateUserRequest updateUser = UpdateUserDF.getData();
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("username", createUser.getUsername())
                 .body(updateUser)
@@ -124,7 +133,7 @@ public class PutUpdateUserTests extends BaseTest {
         String emptyUsername = "";
         UpdateUserRequest updateUser = UpdateUserDF.getData();
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("username", emptyUsername)
                 .body(updateUser)
@@ -150,7 +159,7 @@ public class PutUpdateUserTests extends BaseTest {
         CreateUserRequest invalidUser = new CreateUserRequest();
         invalidUser.setEmail("invalid-email-format");
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("username", createUser.getUsername())
                 .body(invalidUser)

@@ -1,7 +1,7 @@
 package dataFactory.user.createUser;
 
-import net.datafaker.Faker;
 import dataObjects.user.createUser.CreateUserRequest;
+import net.datafaker.Faker;
 
 public class CreateUserDF {
 
@@ -22,18 +22,4 @@ public class CreateUserDF {
 
         return data;
     }
-
-    public static CreateUserRequest getWithNullOptionalFields() {
-        CreateUserRequest data = new CreateUserRequest();
-        data.setId(null);
-        data.setUsername(faker.name().fullName());
-        data.setFirstName(null);
-        data.setLastName(null);
-        data.setEmail(null);
-        data.setPassword(null);
-        data.setPhone(null);
-        data.setUserStatus(0);
-        return data;
-    }
-
 }

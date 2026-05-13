@@ -3,6 +3,7 @@ package petstore.user;
 import base.BaseTest;
 import dataFactory.user.createUser.CreateUserDF;
 import dataObjects.user.createUser.CreateUserRequest;
+import dataObjects.user.loginUser.LoginUserRequest;
 import dataObjects.user.loginUser.LoginUserResponse;
 import io.restassured.response.Response;
 import org.testng.annotations.AfterClass;
@@ -11,6 +12,7 @@ import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import utilities.ApiEndPoints;
 import utilities.ApiHelpers;
+import utilities.JavaHelpers;
 
 import java.util.Map;
 
@@ -20,7 +22,7 @@ public class GetLoginUserTests extends BaseTest {
 
     @BeforeClass()
     public void beforeTest() {
-        ApiHelpers.setBaseUri(ApiEndPoints.PETSTORE_BASE_URL);
+        ApiHelpers.setBaseUri(ApiEndPoints.PET_STORE_BASE_URL);
     }
 
     @AfterClass()
@@ -67,6 +69,8 @@ public class GetLoginUserTests extends BaseTest {
     public void User_Get_LoginUser_BadRequest_ValidUsernameInvalidPassword() {
         CreateUserRequest createUser = CreateUserDF.getData();
 
+        LoginUserRequest request = JavaHelpers.getUser("inValidUser", LoginUserRequest.class);
+
         given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(createUser)
@@ -77,10 +81,10 @@ public class GetLoginUserTests extends BaseTest {
 
         Map<String, Object> queryParams = Map.of(
                 "username", createUser.getUsername(),
-                "password", "invalidpassword"
+                "password", request.getPassword()
         );
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .queryParams(queryParams)
                 .when()
@@ -94,6 +98,8 @@ public class GetLoginUserTests extends BaseTest {
     public void User_Get_LoginUser_BadRequest_InvalidUsernameValidPassword() {
         CreateUserRequest createUser = CreateUserDF.getData();
 
+        LoginUserRequest request = JavaHelpers.getUser("inValidUser", LoginUserRequest.class);
+
         given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(createUser)
@@ -103,11 +109,11 @@ public class GetLoginUserTests extends BaseTest {
                 .statusCode(200);
 
         Map<String, Object> queryParams = Map.of(
-                "username", "invalidusername",
+                "username", request.getUsername(),
                 "password", createUser.getPassword()
         );
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .queryParams(queryParams)
                 .when()
@@ -119,13 +125,13 @@ public class GetLoginUserTests extends BaseTest {
 
     @Test
     public void User_Get_LoginUser_BadRequest_MissingUsername() {
-        Map<String, Object> queryParams = Map.of(
-                "password", "somepassword"
-        );
 
-        Response response = given()
+        LoginUserRequest request = JavaHelpers.getUser("validUser", LoginUserRequest.class);
+        request.setUsername(null);
+
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
-                .queryParams(queryParams)
+                .queryParams("password", request.getPassword())
                 .when()
                 .get(ApiEndPoints.USER_GET_LOGIN)
                 .then()
@@ -135,13 +141,12 @@ public class GetLoginUserTests extends BaseTest {
 
     @Test
     public void User_Get_LoginUser_BadRequest_MissingPassword() {
-        Map<String, Object> queryParams = Map.of(
-                "username", "someusername"
-        );
+        LoginUserRequest request = JavaHelpers.getUser("validUser", LoginUserRequest.class);
+        request.setPassword(null);
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
-                .queryParams(queryParams)
+                .queryParams("username", request.getUsername())
                 .when()
                 .get(ApiEndPoints.USER_GET_LOGIN)
                 .then()
@@ -151,14 +156,14 @@ public class GetLoginUserTests extends BaseTest {
 
     @Test
     public void User_Get_LoginUser_BadRequest_EmptyCredentials() {
-        Map<String, Object> queryParams = Map.of(
-                "username", "",
-                "password", ""
-        );
+        LoginUserRequest request = JavaHelpers.getUser("validUser", LoginUserRequest.class);
+        request.setUsername("");
+        request.setPassword("");
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
-                .queryParams(queryParams)
+                .queryParams("username", request.getUsername())
+                .queryParams("password", request.getPassword())
                 .when()
                 .get(ApiEndPoints.USER_GET_LOGIN)
                 .then()

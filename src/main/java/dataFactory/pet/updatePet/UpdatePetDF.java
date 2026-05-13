@@ -1,11 +1,10 @@
 package dataFactory.pet.updatePet;
 
-import dataObjects.pet.updatePet.UpdatePetRequestResponse;
-import net.datafaker.Faker;
 import dataObjects.pet.updatePet.UpdatePetCategoryRequestResponse;
+import dataObjects.pet.updatePet.UpdatePetRequestResponse;
 import dataObjects.pet.updatePet.UpdatePetTagRequestResponse;
+import net.datafaker.Faker;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

@@ -17,7 +17,7 @@ public class GetInventoryTests extends BaseTest {
 
     @BeforeClass()
     public void beforeTest() {
-        ApiHelpers.setBaseUri(ApiEndPoints.PETSTORE_BASE_URL);
+        ApiHelpers.setBaseUri(ApiEndPoints.PET_STORE_BASE_URL);
     }
 
     @AfterClass()
@@ -53,7 +53,7 @@ public class GetInventoryTests extends BaseTest {
 
     @Test
     public void Store_Get_Inventory_Unauthorized_MissingApiKey() {
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .when()
                 .get(ApiEndPoints.STORE_GET_INVENTORY)
@@ -64,7 +64,7 @@ public class GetInventoryTests extends BaseTest {
 
     @Test
     public void Store_Get_Inventory_Forbidden_InvalidApiKey() {
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithApiKeyAuthentication("invalid-key"))
                 .when()
                 .get(ApiEndPoints.STORE_GET_INVENTORY)

@@ -18,7 +18,7 @@ public class GetUserByNameTests extends BaseTest {
 
     @BeforeClass()
     public void beforeTest() {
-        ApiHelpers.setBaseUri(ApiEndPoints.PETSTORE_BASE_URL);
+        ApiHelpers.setBaseUri(ApiEndPoints.PET_STORE_BASE_URL);
     }
 
     @AfterClass()
@@ -61,7 +61,7 @@ public class GetUserByNameTests extends BaseTest {
     public void User_Get_GetUserByName_NotFound_NonExistentUser() {
         String nonExistentUsername = "nonexistentuser12345";
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("username", nonExistentUsername)
                 .when()
@@ -75,7 +75,7 @@ public class GetUserByNameTests extends BaseTest {
     public void User_Get_GetUserByName_BadRequest_EmptyUsername() {
         String emptyUsername = "";
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("username", emptyUsername)
                 .when()
@@ -118,7 +118,7 @@ public class GetUserByNameTests extends BaseTest {
     public void User_Get_GetUserByName_BadRequest_LongUsername() {
         String longUsername = "a".repeat(1000);
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("username", longUsername)
                 .when()

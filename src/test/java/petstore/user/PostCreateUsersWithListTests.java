@@ -11,15 +11,17 @@ import org.testng.asserts.SoftAssert;
 import utilities.ApiEndPoints;
 import utilities.ApiHelpers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
 public class PostCreateUsersWithListTests extends BaseTest {
 
+
     @BeforeClass()
     public void beforeTest() {
-        ApiHelpers.setBaseUri(ApiEndPoints.PETSTORE_BASE_URL);
+        ApiHelpers.setBaseUri(ApiEndPoints.PET_STORE_BASE_URL);
     }
 
     @AfterClass()
@@ -29,7 +31,9 @@ public class PostCreateUsersWithListTests extends BaseTest {
 
     @Test
     public void User_Post_CreateUsersWithList_Success_ValidList() {
-        List<CreateUsersWithListRequestResponse> request = CreateUsersWithListDF.getValidList();
+        List<CreateUsersWithListRequestResponse> request = CreateUsersWithListDF.getData();
+        List<CreateUsersWithListRequestResponse> request2 = CreateUsersWithListDF.getData();
+        request.addAll(request2);
 
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
@@ -47,7 +51,7 @@ public class PostCreateUsersWithListTests extends BaseTest {
 
     @Test
     public void User_Post_CreateUsersWithList_Success_EmptyList() {
-        List<CreateUsersWithListRequestResponse> request = CreateUsersWithListDF.getEmptyList();
+        List<CreateUsersWithListRequestResponse> request = new ArrayList<>();
 
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
@@ -63,11 +67,11 @@ public class PostCreateUsersWithListTests extends BaseTest {
         softAssert.assertAll();
     }
 
-    @Test
+    @Test(groups = "retry3")
     public void User_Post_CreateUsersWithList_BadRequest_NullList() {
-        List<CreateUsersWithListRequestResponse> request = CreateUsersWithListDF.getNullList();
+        List<CreateUsersWithListRequestResponse> request = null;
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(request)
                 .when()
@@ -79,9 +83,10 @@ public class PostCreateUsersWithListTests extends BaseTest {
 
     @Test
     public void User_Post_CreateUsersWithList_BadRequest_ListWithInvalidUser() {
-        List<CreateUsersWithListRequestResponse> request = CreateUsersWithListDF.getListWithInvalidUser();
+        List<CreateUsersWithListRequestResponse> request = CreateUsersWithListDF.getData();
+        request.getFirst().setEmail("invalid-email-format");
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(request)
                 .when()
@@ -93,7 +98,7 @@ public class PostCreateUsersWithListTests extends BaseTest {
 
     @Test
     public void User_Post_CreateUsersWithList_Success_SingleUserList() {
-        List<CreateUsersWithListRequestResponse> request = CreateUsersWithListDF.getSingleUserList();
+        List<CreateUsersWithListRequestResponse> request = CreateUsersWithListDF.getData();
 
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
@@ -111,7 +116,10 @@ public class PostCreateUsersWithListTests extends BaseTest {
 
     @Test
     public void User_Post_CreateUsersWithList_Success_ListWithDuplicateUsernames() {
-        List<CreateUsersWithListRequestResponse> request = CreateUsersWithListDF.getListWithDuplicateUsernames();
+        List<CreateUsersWithListRequestResponse> request = CreateUsersWithListDF.getData();
+        List<CreateUsersWithListRequestResponse> request2 = CreateUsersWithListDF.getData();
+        request2.getFirst().setUsername(request.getFirst().getUsername());
+        request.addAll(request2);
 
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())

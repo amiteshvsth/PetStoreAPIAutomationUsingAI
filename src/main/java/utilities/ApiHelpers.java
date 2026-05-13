@@ -149,7 +149,7 @@ public class ApiHelpers {
     }
 
 
-    public Response sendPutRequest(String apiEndpoint, Object request, boolean isJignectPortal) {
+    public Response sendPutRequest(String apiEndpoint, Object request) {
         Response response = retryApi(() -> RestAssured.given()
                         .body(request)
                         .when()
@@ -162,7 +162,7 @@ public class ApiHelpers {
     }
 
 
-    public Response sendDeleteRequest(String apiEndpoint, Object request, boolean isJignectPortal) {
+    public Response sendDeleteRequest(String apiEndpoint, Object request) {
         Response response = retryApi(() -> RestAssured.given()
                         .body(request)
                         .when()

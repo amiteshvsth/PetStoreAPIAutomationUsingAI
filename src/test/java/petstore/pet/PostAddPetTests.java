@@ -13,6 +13,7 @@ import utilities.ApiEndPoints;
 import utilities.ApiHelpers;
 
 import java.util.Collections;
+import java.util.HashSet;
 
 import static io.restassured.RestAssured.given;
 
@@ -21,7 +22,7 @@ public class PostAddPetTests extends BaseTest {
 
     @BeforeClass()
     public void beforeTest() {
-        ApiHelpers.setBaseUri(ApiEndPoints.PETSTORE_BASE_URL);
+        ApiHelpers.setBaseUri(ApiEndPoints.PET_STORE_BASE_URL);
     }
 
     @AfterClass()
@@ -51,7 +52,10 @@ public class PostAddPetTests extends BaseTest {
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(responseDto.getName(), request.getName());
         softAssert.assertEquals(responseDto.getPhotoUrls(), request.getPhotoUrls());
-        softAssert.assertNotNull(responseDto.getId());
+        softAssert.assertNull(responseDto.getId());
+        softAssert.assertNull(responseDto.getCategory());
+        softAssert.assertNull(responseDto.getTags());
+        softAssert.assertNull(responseDto.getStatus());
         softAssert.assertAll();
     }
 
@@ -71,11 +75,13 @@ public class PostAddPetTests extends BaseTest {
         AddPetRequestResponse responseDto = response.as(AddPetRequestResponse.class);
 
         SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(responseDto.getId(), request.getId());
         softAssert.assertEquals(responseDto.getName(), request.getName());
         softAssert.assertEquals(responseDto.getPhotoUrls(), request.getPhotoUrls());
+        softAssert.assertEquals(responseDto.getCategory().getId(), request.getCategory().getId());
+        softAssert.assertEquals(responseDto.getCategory().getName(), request.getCategory().getName());
+        softAssert.assertEquals(new HashSet<>(responseDto.getTags()), new HashSet<>(request.getTags()));
         softAssert.assertEquals(responseDto.getStatus(), request.getStatus());
-        softAssert.assertNotNull(responseDto.getCategory());
-        softAssert.assertNotNull(responseDto.getTags());
         softAssert.assertAll();
     }
 
@@ -95,9 +101,15 @@ public class PostAddPetTests extends BaseTest {
         AddPetRequestResponse responseDto = response.as(AddPetRequestResponse.class);
 
         SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(responseDto.getId(), request.getId());
         softAssert.assertEquals(responseDto.getName(), request.getName());
+        softAssert.assertEquals(responseDto.getStatus(), request.getStatus());
         softAssert.assertEquals(responseDto.getPhotoUrls().size(), 3);
         softAssert.assertEquals(responseDto.getTags().size(), 3);
+        // After line where you validate response, add:
+        softAssert.assertEquals(responseDto.getCategory().getId(), request.getCategory().getId());
+        softAssert.assertEquals(responseDto.getCategory().getName(), request.getCategory().getName());
+        softAssert.assertEquals(new HashSet<>(responseDto.getTags()), new HashSet<>(request.getTags()));
         softAssert.assertAll();
     }
 
@@ -106,7 +118,7 @@ public class PostAddPetTests extends BaseTest {
         AddPetRequestResponse request = AddPetDF.getData();
         request.setPhotoUrls(Collections.emptyList());
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(request)
                 .when()
@@ -121,7 +133,7 @@ public class PostAddPetTests extends BaseTest {
         AddPetRequestResponse request = AddPetDF.getData();
         request.setName(null);
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(request)
                 .when()
@@ -136,7 +148,7 @@ public class PostAddPetTests extends BaseTest {
         AddPetRequestResponse request = AddPetDF.getData();
         request.setStatus("invalid_status");
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(request)
                 .when()
@@ -163,7 +175,14 @@ public class PostAddPetTests extends BaseTest {
         AddPetRequestResponse responseDto = response.as(AddPetRequestResponse.class);
 
         SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(responseDto.getId(), request.getId());
         softAssert.assertEquals(responseDto.getName(), request.getName());
+        softAssert.assertEquals(responseDto.getPhotoUrls(), request.getPhotoUrls());
+        softAssert.assertEquals(responseDto.getCategory().getId(), request.getCategory().getId());
+        softAssert.assertEquals(responseDto.getCategory().getName(), request.getCategory().getName());
+        softAssert.assertEquals(new HashSet<>(responseDto.getTags()), new HashSet<>(request.getTags()));
+        softAssert.assertEquals(responseDto.getStatus(), request.getStatus());
+
         softAssert.assertAll();
     }
 
@@ -184,13 +203,22 @@ public class PostAddPetTests extends BaseTest {
         AddPetRequestResponse responseDto = response.as(AddPetRequestResponse.class);
 
         SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(responseDto.getId(), request.getId());
         softAssert.assertEquals(responseDto.getName(), request.getName());
+        softAssert.assertEquals(responseDto.getPhotoUrls(), request.getPhotoUrls());
+        softAssert.assertEquals(responseDto.getCategory().getId(), request.getCategory().getId());
+        softAssert.assertEquals(responseDto.getCategory().getName(), request.getCategory().getName());
+        softAssert.assertEquals(new HashSet<>(responseDto.getTags()), new HashSet<>(request.getTags()));
+        softAssert.assertEquals(responseDto.getStatus(), request.getStatus());
+
         softAssert.assertAll();
     }
 
     @Test
     public void Pet_Post_AddPet_Success_NullOptionalFields() {
-        AddPetRequestResponse request = AddPetDF.getWithNullOptionalFields();
+        AddPetRequestResponse request = new AddPetRequestResponse();
+        request.setName(faker.animal().name());
+        request.setPhotoUrls(Collections.singletonList(faker.internet().url()));
 
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
@@ -206,6 +234,11 @@ public class PostAddPetTests extends BaseTest {
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(responseDto.getName(), request.getName());
         softAssert.assertEquals(responseDto.getPhotoUrls(), request.getPhotoUrls());
+        softAssert.assertNull(responseDto.getCategory());
+        softAssert.assertNull(responseDto.getTags());
+        softAssert.assertNull(responseDto.getStatus());
+        softAssert.assertNull(responseDto.getId());
+
         softAssert.assertAll();
     }
 
@@ -237,14 +270,22 @@ public class PostAddPetTests extends BaseTest {
 
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(responseDto.getId(), duplicatePet.getId());
+        softAssert.assertEquals(responseDto.getName(), duplicatePet.getName());
+        softAssert.assertEquals(responseDto.getPhotoUrls(), duplicatePet.getPhotoUrls());
+        softAssert.assertEquals(responseDto.getCategory().getId(), duplicatePet.getCategory().getId());
+        softAssert.assertEquals(responseDto.getCategory().getName(), duplicatePet.getCategory().getName());
+        softAssert.assertEquals(new HashSet<>(responseDto.getTags()), new HashSet<>(duplicatePet.getTags()));
+        softAssert.assertEquals(responseDto.getStatus(), duplicatePet.getStatus());
+
         softAssert.assertAll();
+
     }
 
     @Test
     public void Pet_Post_AddPet_Unauthorized() {
         AddPetRequestResponse request = AddPetDF.getData();
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .header("Authorization", "Bearer invalid_token")
                 .body(request)

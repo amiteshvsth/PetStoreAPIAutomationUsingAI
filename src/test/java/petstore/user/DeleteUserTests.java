@@ -3,6 +3,7 @@ package petstore.user;
 import base.BaseTest;
 import dataFactory.user.createUser.CreateUserDF;
 import dataObjects.user.createUser.CreateUserRequest;
+import dataObjects.user.deleteUser.DeleteUserResponse;
 import io.restassured.response.Response;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -17,7 +18,7 @@ public class DeleteUserTests extends BaseTest {
 
     @BeforeClass()
     public void beforeTest() {
-        ApiHelpers.setBaseUri(ApiEndPoints.PETSTORE_BASE_URL);
+        ApiHelpers.setBaseUri(ApiEndPoints.PET_STORE_BASE_URL);
     }
 
     @AfterClass()
@@ -46,8 +47,12 @@ public class DeleteUserTests extends BaseTest {
                 .statusCode(200)
                 .extract().response();
 
+        DeleteUserResponse deleteUserResponse = response.as(DeleteUserResponse.class);
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(response.statusCode(), 200);
+        softAssert.assertEquals(deleteUserResponse.getCode(), 200);
+        softAssert.assertEquals(deleteUserResponse.getType(), "unknown");
+        softAssert.assertEquals(deleteUserResponse.getMessage(), createUser.getUsername());
+
         softAssert.assertAll();
     }
 
@@ -55,7 +60,7 @@ public class DeleteUserTests extends BaseTest {
     public void User_Delete_User_NotFound_NonExistentUser() {
         String nonExistentUsername = "nonexistentuser12345";
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("username", nonExistentUsername)
                 .when()
@@ -69,7 +74,7 @@ public class DeleteUserTests extends BaseTest {
     public void User_Delete_User_BadRequest_EmptyUsername() {
         String emptyUsername = "";
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("username", emptyUsername)
                 .when()
@@ -101,8 +106,12 @@ public class DeleteUserTests extends BaseTest {
                 .statusCode(200)
                 .extract().response();
 
+        DeleteUserResponse deleteUserResponse = response.as(DeleteUserResponse.class);
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(response.statusCode(), 200);
+        softAssert.assertEquals(deleteUserResponse.getCode(), 200);
+        softAssert.assertEquals(deleteUserResponse.getType(), "unknown");
+        softAssert.assertEquals(deleteUserResponse.getMessage(), createUser.getUsername());
+
         softAssert.assertAll();
     }
 }

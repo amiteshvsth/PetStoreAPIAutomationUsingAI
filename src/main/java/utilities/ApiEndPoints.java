@@ -1,13 +1,13 @@
 package utilities;
 
 public class ApiEndPoints {
-    public static final String PETSTORE_BASE_URL = "https://petstore.swagger.io/v2";
+    public static final String PET_STORE_BASE_URL = "https://petstore.swagger.io/v2";
 
     // Pet endpoints
     public static final String PET_POST_CREATE_PET = "/pet";
     public static final String PET_PUT_UPDATE_PET = "/pet";
     public static final String PET_GET_FIND_BY_STATUS = "/pet/findByStatus";
-    public static final String PET_GET_FIND_BY_TAGS = "/pet/findByTags";
+    //public static final String PET_GET_FIND_BY_TAGS = "/pet/findByTags";
     public static final String PET_GET_PET_BY_ID = "/pet/{petId}";
     public static final String PET_POST_UPDATE_PET_FORM = "/pet/{petId}";
     public static final String PET_DELETE_PET = "/pet/{petId}";

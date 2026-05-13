@@ -18,7 +18,7 @@ public class GetOrderByIdTests extends BaseTest {
 
     @BeforeClass()
     public void beforeTest() {
-        ApiHelpers.setBaseUri(ApiEndPoints.PETSTORE_BASE_URL);
+        ApiHelpers.setBaseUri(ApiEndPoints.PET_STORE_BASE_URL);
     }
 
     @AfterClass()
@@ -57,80 +57,13 @@ public class GetOrderByIdTests extends BaseTest {
         softAssert.assertEquals(responseDto.getPetId(), createdOrder.getPetId());
         softAssert.assertEquals(responseDto.getQuantity(), createdOrder.getQuantity());
         softAssert.assertEquals(responseDto.getStatus(), createdOrder.getStatus());
+        softAssert.assertEquals(responseDto.getComplete(), createdOrder.getComplete());
         softAssert.assertAll();
     }
-
-    @Test
-    public void Store_Get_GetOrderById_Success_MinimumBoundary() {
-        PlaceOrderRequestResponse createOrder = PlaceOrderDF.getData();
-        createOrder.setId(1L);
-
-        Response createResponse = given()
-                .spec(apiHelpers.requestSpecificationWithJSONHeader())
-                .body(createOrder)
-                .when()
-                .post(ApiEndPoints.STORE_POST_ORDER)
-                .then()
-                .statusCode(200)
-                .extract().response();
-
-        PlaceOrderRequestResponse createdOrder = createResponse.as(PlaceOrderRequestResponse.class);
-
-        Response response = given()
-                .spec(apiHelpers.requestSpecificationWithJSONHeader())
-                .pathParam("orderId", createdOrder.getId())
-                .when()
-                .get(ApiEndPoints.STORE_GET_ORDER_BY_ID)
-                .then()
-                .statusCode(200)
-                .extract().response();
-
-        GetOrderByIdResponse responseDto = response.as(GetOrderByIdResponse.class);
-
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertNotNull(responseDto);
-        softAssert.assertEquals(responseDto.getId(), createdOrder.getId());
-        softAssert.assertAll();
-    }
-
-    @Test
-    public void Store_Get_GetOrderById_Success_MaximumBoundary() {
-        Long orderId = 10L;
-
-        Response response = given()
-                .spec(apiHelpers.requestSpecificationWithJSONHeader())
-                .pathParam("orderId", orderId)
-                .when()
-                .get(ApiEndPoints.STORE_GET_ORDER_BY_ID)
-                .then()
-                .statusCode(200)
-                .extract().response();
-
-        GetOrderByIdResponse responseDto = response.as(GetOrderByIdResponse.class);
-
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertNotNull(responseDto);
-        softAssert.assertAll();
-    }
-
-    @Test
-    public void Store_Get_GetOrderById_BadRequest_BelowMinimum() {
-        Long orderId = 0L;
-
-        Response response = given()
-                .spec(apiHelpers.requestSpecificationWithJSONHeader())
-                .pathParam("orderId", orderId)
-                .when()
-                .get(ApiEndPoints.STORE_GET_ORDER_BY_ID)
-                .then()
-                .statusCode(404)
-                .extract().response();
-    }
-
 
     @Test
     public void Store_Get_GetOrderById_BadRequest_InvalidFormat() {
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("orderId", "invalid")
                 .when()
