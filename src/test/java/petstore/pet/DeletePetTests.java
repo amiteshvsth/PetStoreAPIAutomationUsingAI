@@ -144,8 +144,7 @@ public class DeletePetTests extends BaseTest {
         AddPetRequestResponse createdPet = createResponse.as(AddPetRequestResponse.class);
 
         given()
-                .spec(apiHelpers.requestSpecificationWithJSONHeader())
-                .header("Authorization", "Bearer invalid_token")
+                .spec(apiHelpers.requestSpecificationWithAuthorization("Bearer invalid_token"))
                 .pathParam("petId", createdPet.getId())
                 .when()
                 .delete(ApiEndPoints.PET_DELETE_PET)

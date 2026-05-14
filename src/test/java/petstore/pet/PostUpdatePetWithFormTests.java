@@ -61,7 +61,7 @@ public class PostUpdatePetWithFormTests extends BaseTest {
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(updatePetWithFormResponse.getCode(), 200);
         softAssert.assertEquals(updatePetWithFormResponse.getType(), "unknown");
-        softAssert.assertEquals(updatePetWithFormResponse.getMessage(), request.getId().toString());
+        softAssert.assertEquals(updatePetWithFormResponse.getMessage(), createdPet.getId().toString());
         softAssert.assertAll();
     }
 
@@ -97,7 +97,7 @@ public class PostUpdatePetWithFormTests extends BaseTest {
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(updatePetWithFormResponse.getCode(), 200);
         softAssert.assertEquals(updatePetWithFormResponse.getType(), "unknown");
-        softAssert.assertEquals(updatePetWithFormResponse.getMessage(), request.getId().toString());
+        softAssert.assertEquals(updatePetWithFormResponse.getMessage(), createdPet.getId().toString());
         softAssert.assertAll();
     }
 
@@ -133,7 +133,7 @@ public class PostUpdatePetWithFormTests extends BaseTest {
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(updatePetWithFormResponse.getCode(), 200);
         softAssert.assertEquals(updatePetWithFormResponse.getType(), "unknown");
-        softAssert.assertEquals(updatePetWithFormResponse.getMessage(), request.getId().toString());
+        softAssert.assertEquals(updatePetWithFormResponse.getMessage(), createdPet.getId().toString());
         softAssert.assertAll();
     }
 
@@ -257,7 +257,7 @@ public class PostUpdatePetWithFormTests extends BaseTest {
         );
 
         given()
-                .spec(apiHelpers.requestSpecificationWithCustomHeader("Authorization", "Bearer invalid_token"))
+                .spec(apiHelpers.requestSpecificationWithAuthorization("Bearer invalid_token"))
                 .pathParam("petId", createdPet.getId())
                 .formParams(formData)
                 .when()

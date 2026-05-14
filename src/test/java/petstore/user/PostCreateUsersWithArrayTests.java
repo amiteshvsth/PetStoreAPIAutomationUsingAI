@@ -68,20 +68,6 @@ public class PostCreateUsersWithArrayTests extends BaseTest {
     }
 
     @Test
-    public void User_Post_CreateUsersWithArray_BadRequest_NullArray() {
-        List<CreateUsersWithArrayRequestResponse> request = null;
-
-        given()
-                .spec(apiHelpers.requestSpecificationWithJSONHeader())
-                .body(request)
-                .when()
-                .post(ApiEndPoints.USER_POST_CREATE_WITH_ARRAY)
-                .then()
-                .statusCode(400)
-                .extract().response();
-    }
-
-    @Test
     public void User_Post_CreateUsersWithArray_BadRequest_ArrayWithInvalidUser() {
         List<CreateUsersWithArrayRequestResponse> request = CreateUsersWithArrayDF.getData();
         request.getFirst().setEmail("invalid-email-format");

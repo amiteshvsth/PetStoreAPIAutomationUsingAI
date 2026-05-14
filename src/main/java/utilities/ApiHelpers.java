@@ -71,6 +71,10 @@ public class ApiHelpers {
         return baseRequestSpecBuilder().addHeader("api_key", apiKey).build();
     }
 
+    public RequestSpecification requestSpecificationWithAuthorization(String headerValue) {
+        return baseRequestSpecBuilder().addHeader("Authorization", headerValue).build();
+    }
+
     public RequestSpecification requestSpecificationWithCustomHeader(String headerName, String headerValue) {
         return baseRequestSpecBuilder().addHeader(headerName, headerValue).build();
     }

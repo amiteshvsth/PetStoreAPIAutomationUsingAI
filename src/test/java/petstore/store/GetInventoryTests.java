@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import utilities.ApiEndPoints;
 import utilities.ApiHelpers;
+import utilities.EnvConfig;
 
 import java.util.Map;
 
@@ -28,7 +29,7 @@ public class GetInventoryTests extends BaseTest {
     @Test
     public void Store_Get_Inventory_Success_ValidApiKey() {
         Response response = given()
-                .spec(apiHelpers.requestSpecificationWithApiKeyAuthentication("special-key"))
+                .spec(apiHelpers.requestSpecificationWithApiKeyAuthentication(EnvConfig.get("VALID_API_KEY")))
                 .when()
                 .get(ApiEndPoints.STORE_GET_INVENTORY)
                 .then()
@@ -76,7 +77,7 @@ public class GetInventoryTests extends BaseTest {
     @Test
     public void Store_Get_Inventory_Success_VerifyResponseStructure() {
         Response response = given()
-                .spec(apiHelpers.requestSpecificationWithApiKeyAuthentication("special-key"))
+                .spec(apiHelpers.requestSpecificationWithApiKeyAuthentication(EnvConfig.get("VALID_API_KEY")))
                 .when()
                 .get(ApiEndPoints.STORE_GET_INVENTORY)
                 .then()

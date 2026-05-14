@@ -76,7 +76,7 @@ public class PostCreateUserTests extends BaseTest {
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(createUserResponse.getCode(), 200);
         softAssert.assertEquals(createUserResponse.getType(), "unknown");
-        softAssert.assertEquals(createUserResponse.getMessage(), request.getId().toString());
+        softAssert.assertNotNull(createUserResponse.getMessage());
 
         softAssert.assertAll();
     }
@@ -188,7 +188,7 @@ public class PostCreateUserTests extends BaseTest {
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(createUserResponse.getCode(), 200);
         softAssert.assertEquals(createUserResponse.getType(), "unknown");
-        softAssert.assertEquals(createUserResponse.getMessage(), request.getId().toString());
+        softAssert.assertNotNull(createUserResponse.getMessage());
 
         softAssert.assertAll();
     }

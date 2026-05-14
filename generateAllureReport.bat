@@ -1,0 +1,3 @@
+@echo off
+echo Generating and Opening Allure Report...
+allure serve target/allure-results

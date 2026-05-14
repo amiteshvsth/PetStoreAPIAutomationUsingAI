@@ -2,14 +2,12 @@ package base;
 
 import io.restassured.RestAssured;
 import io.restassured.filter.log.LogDetail;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
 import utilities.ApiHelpers;
 import utilities.EnvConfig;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,119 +18,92 @@ import java.util.stream.Stream;
 
 public class BaseTest {
 
-    protected ApiHelpers apiHelpers;
+    private static final Path ALLURE_RESULTS = Paths.get("target/allure-results");
+    private static final Path ALLURE_HISTORY_SOURCE = Paths.get("target/allure-report/history");
+    private static final Path ALLURE_HISTORY_DESTINATION = ALLURE_RESULTS.resolve("history");
+    protected final ApiHelpers apiHelpers = new ApiHelpers();
 
     @BeforeSuite
-    public void setupBeforeSuite() {
+    public void setupSuite() {
 
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails(LogDetail.ALL);
-
-        File allureResultsDir = new File("target/allure-results");
-
-        if (!allureResultsDir.exists() && !allureResultsDir.mkdirs()) {
-            throw new RuntimeException("Failed to create allure-results directory");
-        }
-
         cleanAllureResults();
         copyAllureHistory();
-
-        Properties properties = new Properties();
-
-        properties.setProperty("Environment", EnvConfig.get("ENVIRONMENT"));
-        properties.setProperty("Framework", EnvConfig.get("FRAMEWORK"));
-        properties.setProperty("Execution", EnvConfig.get("EXECUTION"));
-
-        File environmentFile = new File(allureResultsDir, "environment.properties");
-
-        try (FileOutputStream fos = new FileOutputStream(environmentFile)) {
-            properties.store(fos, "Allure Environment");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        createEnvironmentPropertiesFile();
     }
 
     private void cleanAllureResults() {
 
-        Path allureResults = Paths.get("target/allure-results");
-
         try {
+            if (Files.exists(ALLURE_RESULTS)) {
 
-            if (Files.exists(allureResults)) {
-
-                try (Stream<Path> paths = Files.walk(allureResults)) {
+                try (Stream<Path> paths = Files.walk(ALLURE_RESULTS)) {
 
                     paths.sorted(Comparator.reverseOrder())
+                            .filter(path -> !path.startsWith(ALLURE_HISTORY_DESTINATION))
                             .forEach(path -> {
 
                                 try {
-
-                                    // Preserve history folder
-                                    if (!path.toString().contains("history")) {
-                                        Files.deleteIfExists(path);
-                                    }
-
+                                    Files.deleteIfExists(path);
                                 } catch (IOException e) {
-                                    throw new RuntimeException(e);
+                                    throw new RuntimeException("Failed to delete path: " + path, e);
                                 }
                             });
                 }
             }
 
-            Files.createDirectories(allureResults);
+            Files.createDirectories(ALLURE_RESULTS);
+            System.out.println("Allure results cleaned successfully.");
 
         } catch (Exception e) {
-            System.err.println("Failed to clean allure results.");
+            throw new RuntimeException("Failed to clean allure results.", e);
         }
     }
 
     private void copyAllureHistory() {
 
-        Path source = Paths.get("target/allure-report/history");
-        Path destination = Paths.get("target/allure-results/history");
+        if (!Files.exists(ALLURE_HISTORY_SOURCE)) {
+            return;
+        }
 
-        try {
+        try (Stream<Path> paths = Files.walk(ALLURE_HISTORY_SOURCE)) {
 
-            if (Files.exists(source)) {
+            paths.forEach(path -> {
+                try {
+                    Path targetPath = ALLURE_HISTORY_DESTINATION.resolve(ALLURE_HISTORY_SOURCE.relativize(path));
 
-                try (Stream<Path> paths = Files.walk(source)) {
+                    if (Files.isDirectory(path)) {
+                        Files.createDirectories(targetPath);
+                    } else {
+                        Files.createDirectories(targetPath.getParent());
+                        Files.copy(path, targetPath, StandardCopyOption.REPLACE_EXISTING);
+                    }
 
-                    paths.forEach(path -> {
-
-                        try {
-
-                            Path targetPath = destination.resolve(
-                                    source.relativize(path)
-                            );
-
-                            if (Files.isDirectory(path)) {
-                                Files.createDirectories(targetPath);
-                            } else {
-
-                                Files.createDirectories(targetPath.getParent());
-
-                                Files.copy(
-                                        path,
-                                        targetPath,
-                                        StandardCopyOption.REPLACE_EXISTING
-                                );
-                            }
-
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
+                } catch (IOException e) {
+                    throw new RuntimeException("Failed to copy Allure history.", e);
                 }
-
-                System.out.println("Allure history copied successfully.");
-            }
+            });
+            System.out.println("Allure history copied successfully.");
 
         } catch (Exception e) {
-            System.err.println("Failed to copy Allure history.");
+            throw new RuntimeException("Failed to copy Allure history.", e);
         }
     }
 
-    @BeforeClass
-    public void setupBeforeClass() {
-        apiHelpers = new ApiHelpers();
+    private void createEnvironmentPropertiesFile() {
+
+        Properties properties = new Properties();
+        properties.setProperty("Environment", EnvConfig.get("ENVIRONMENT"));
+        properties.setProperty("Framework", EnvConfig.get("FRAMEWORK"));
+        properties.setProperty("Execution", EnvConfig.get("EXECUTION"));
+        Path environmentFile = ALLURE_RESULTS.resolve("environment.properties");
+
+        try (OutputStream outputStream = Files.newOutputStream(environmentFile)) {
+            properties.store(outputStream, "Allure Environment");
+            System.out.println("Allure environment.properties created successfully.");
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create environment.properties file.", e);
+        }
     }
 }

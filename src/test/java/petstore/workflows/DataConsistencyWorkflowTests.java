@@ -55,7 +55,7 @@ public class DataConsistencyWorkflowTests extends BaseTest {
         PlaceOrderRequestResponse order = PlaceOrderDF.getData();
         order.setPetId(createdPet.getId());
 
-        Response response = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(order)
                 .when()
@@ -63,9 +63,6 @@ public class DataConsistencyWorkflowTests extends BaseTest {
                 .then()
                 .statusCode(400)
                 .extract().response();
-
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertAll();
     }
 
     @Test
@@ -97,7 +94,7 @@ public class DataConsistencyWorkflowTests extends BaseTest {
 
         PlaceOrderRequestResponse createdOrder = orderResponse.as(PlaceOrderRequestResponse.class);
 
-        Response deletePetResponse = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("petId", createdPet.getId())
                 .when()
@@ -106,7 +103,7 @@ public class DataConsistencyWorkflowTests extends BaseTest {
                 .statusCode(200)
                 .extract().response();
 
-        Response getOrderResponse = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("orderId", createdOrder.getId())
                 .when()
@@ -149,7 +146,7 @@ public class DataConsistencyWorkflowTests extends BaseTest {
         CreateUserRequest updateUser = CreateUserDF.getData();
         updateUser.setEmail("updated.email@example.com");
 
-        Response updateUserResponse = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("username", createUser.getUsername())
                 .body(updateUser)
@@ -159,7 +156,7 @@ public class DataConsistencyWorkflowTests extends BaseTest {
                 .statusCode(200)
                 .extract().response();
 
-        Response getOrderResponse = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("orderId", createdOrder.getId())
                 .when()

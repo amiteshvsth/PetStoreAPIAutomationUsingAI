@@ -3,7 +3,9 @@ package petstore.pet;
 import base.BaseTest;
 import dataFactory.pet.addPet.AddPetDF;
 import dataObjects.pet.addPet.AddPetRequestResponse;
+import dataObjects.pet.addPet.AddPetTagRequestResponse;
 import dataObjects.pet.getPetById.GetPetByIdResponse;
+import dataObjects.pet.getPetById.GetPetByIdTagResponse;
 import io.restassured.response.Response;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -12,7 +14,8 @@ import org.testng.asserts.SoftAssert;
 import utilities.ApiEndPoints;
 import utilities.ApiHelpers;
 
-import java.util.HashSet;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
 
@@ -63,7 +66,21 @@ public class GetPetByIdTests extends BaseTest {
         softAssert.assertEquals(responseDto.getCategory().getId(), createdPet.getCategory().getId());
         softAssert.assertEquals(responseDto.getCategory().getName(), createdPet.getCategory().getName());
         // Assert nested tags data inline
-        softAssert.assertEquals(new HashSet<>(responseDto.getTags()), new HashSet<>(createdPet.getTags()));
+        Map<Long, String> expectedTags = createdPet.getTags()
+                .stream()
+                .collect(Collectors.toMap(
+                        AddPetTagRequestResponse::getId,
+                        AddPetTagRequestResponse::getName
+                ));
+
+        Map<Long, String> actualTags = responseDto.getTags()
+                .stream()
+                .collect(Collectors.toMap(
+                        GetPetByIdTagResponse::getId,
+                        GetPetByIdTagResponse::getName
+                ));
+
+        softAssert.assertEquals(actualTags, expectedTags);
         softAssert.assertAll();
     }
 

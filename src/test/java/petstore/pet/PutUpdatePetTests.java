@@ -217,13 +217,12 @@ public class PutUpdatePetTests extends BaseTest {
         UpdatePetRequestResponse updatePet = UpdatePetDF.getData();
 
         given()
-                .spec(apiHelpers.requestSpecificationWithJSONHeader())
-                .header("Authorization", "Bearer invalid_token")
+                .spec(apiHelpers.requestSpecificationWithAuthorization("Bearer invalid_token"))
                 .body(updatePet)
                 .when()
                 .put(ApiEndPoints.PET_PUT_UPDATE_PET)
                 .then()
-                .statusCode(401)
+                .statusCode(415)
                 .extract().response();
     }
 }

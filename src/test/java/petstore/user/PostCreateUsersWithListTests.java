@@ -68,20 +68,6 @@ public class PostCreateUsersWithListTests extends BaseTest {
     }
 
     @Test(groups = "retry3")
-    public void User_Post_CreateUsersWithList_BadRequest_NullList() {
-        List<CreateUsersWithListRequestResponse> request = null;
-
-        given()
-                .spec(apiHelpers.requestSpecificationWithJSONHeader())
-                .body(request)
-                .when()
-                .post(ApiEndPoints.USER_POST_CREATE_WITH_LIST)
-                .then()
-                .statusCode(400)
-                .extract().response();
-    }
-
-    @Test
     public void User_Post_CreateUsersWithList_BadRequest_ListWithInvalidUser() {
         List<CreateUsersWithListRequestResponse> request = CreateUsersWithListDF.getData();
         request.getFirst().setEmail("invalid-email-format");

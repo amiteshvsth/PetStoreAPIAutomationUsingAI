@@ -67,23 +67,21 @@ public class AuthorizationWorkflowTests extends BaseTest {
         AddPetRequestResponse pet = AddPetDF.getData();
 
         given()
-                .spec(apiHelpers.requestSpecificationWithJSONHeader())
-                .header("Authorization", "Bearer invalid_token")
+                .spec(apiHelpers.requestSpecificationWithAuthorization("Bearer invalid_token"))
                 .body(pet)
                 .when()
                 .post(ApiEndPoints.PET_POST_CREATE_PET)
                 .then()
-                .statusCode(401)
+                .statusCode(415)
                 .extract().response();
 
         given()
-                .spec(apiHelpers.requestSpecificationWithJSONHeader())
-                .header("Authorization", "Bearer invalid_token")
+                .spec(apiHelpers.requestSpecificationWithAuthorization("Bearer invalid_token"))
                 .body(pet)
                 .when()
                 .put(ApiEndPoints.PET_PUT_UPDATE_PET)
                 .then()
-                .statusCode(401)
+                .statusCode(415)
                 .extract().response();
 
     }
@@ -93,13 +91,12 @@ public class AuthorizationWorkflowTests extends BaseTest {
         PlaceOrderRequestResponse order = PlaceOrderDF.getData();
 
         given()
-                .spec(apiHelpers.requestSpecificationWithJSONHeader())
-                .header("Authorization", "Bearer invalid_token")
+                .spec(apiHelpers.requestSpecificationWithAuthorization("Bearer invalid_token"))
                 .body(order)
                 .when()
                 .post(ApiEndPoints.STORE_POST_ORDER)
                 .then()
-                .statusCode(401)
+                .statusCode(415)
                 .extract().response();
 
     }

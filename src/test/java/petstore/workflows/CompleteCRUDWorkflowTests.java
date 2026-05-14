@@ -72,7 +72,7 @@ public class CompleteCRUDWorkflowTests extends BaseTest {
 
         FindPetsByStatusResponse retrievedPet = getResponse.as(FindPetsByStatusResponse.class);
 
-        Response deleteResponse = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("petId", retrievedPet.getId())
                 .when()
@@ -100,7 +100,7 @@ public class CompleteCRUDWorkflowTests extends BaseTest {
                 .then()
                 .statusCode(200);
 
-        Response loginResponse = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .queryParam("username", createUser.getUsername())
                 .queryParam("password", createUser.getPassword())
@@ -134,7 +134,7 @@ public class CompleteCRUDWorkflowTests extends BaseTest {
 
         GetOrderByIdResponse retrievedOrder = getOrderResponse.as(GetOrderByIdResponse.class);
 
-        Response deleteOrderResponse = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("orderId", retrievedOrder.getId())
                 .when()
@@ -143,7 +143,7 @@ public class CompleteCRUDWorkflowTests extends BaseTest {
                 .statusCode(200)
                 .extract().response();
 
-        Response logoutResponse = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .when()
                 .get(ApiEndPoints.USER_GET_LOGOUT)
@@ -184,7 +184,7 @@ public class CompleteCRUDWorkflowTests extends BaseTest {
 
         java.util.List<FindPetsByStatusResponse> petsByStatus = findByStatusResponse.jsonPath().getList("", FindPetsByStatusResponse.class);
 
-        Response updateFormResponse = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithFormUrlEncoded())
                 .pathParam("petId", createdPet.getId())
                 .formParam("name", "UpdatedViaForm")
@@ -195,7 +195,7 @@ public class CompleteCRUDWorkflowTests extends BaseTest {
                 .statusCode(200)
                 .extract().response();
 
-        Response deleteResponse = given()
+        given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .pathParam("petId", createdPet.getId())
                 .when()

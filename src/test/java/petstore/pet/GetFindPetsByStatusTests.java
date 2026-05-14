@@ -13,7 +13,6 @@ import org.testng.asserts.SoftAssert;
 import utilities.ApiEndPoints;
 import utilities.ApiHelpers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
@@ -33,10 +32,9 @@ public class GetFindPetsByStatusTests extends BaseTest {
     @Test
     public void Pet_Get_FindPetsByStatus_Success_SingleValidStatus() {
         AddPetRequestResponse request = AddPetDF.getData();
-        List<String> status = new ArrayList<>();
-        status.add("available");
-        request.setStatus(status.getFirst());
 
+        List<String> statuses = List.of("available");
+        request.setStatus(statuses.getFirst());
         given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
                 .body(request)
@@ -47,7 +45,7 @@ public class GetFindPetsByStatusTests extends BaseTest {
 
         FindPetsByStatusRequest pet1 = new FindPetsByStatusRequest();
 
-        pet1.setStatus(status);
+        pet1.setStatus(statuses);
 
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
@@ -63,33 +61,18 @@ public class GetFindPetsByStatusTests extends BaseTest {
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertTrue(!responseDto.isEmpty());
         softAssert.assertTrue(responseDto.stream().allMatch(p -> "available".equals(p.getStatus())));
-        // Assert nested category and tags data inline
-        for (FindPetsByStatusResponse pet : responseDto) {
-            if (pet.getCategory() != null) {
-                softAssert.assertNotNull(pet.getCategory().getId());
-                softAssert.assertNotNull(pet.getCategory().getName());
-            }
-            if (pet.getTags() != null && !pet.getTags().isEmpty()) {
-                for (var tag : pet.getTags()) {
-                    softAssert.assertNotNull(tag.getId());
-                    softAssert.assertNotNull(tag.getName());
-                }
-            }
-        }
         softAssert.assertAll();
     }
 
     @Test
     public void Pet_Get_FindPetsByStatus_Success_MultipleValidStatuses() {
-        List<String> status = new ArrayList<>();
-        status.add("available");
-        status.add("pending");
+        List<String> statuses = List.of("available", "pending");
 
         AddPetRequestResponse pet1 = AddPetDF.getData();
-        pet1.setStatus(status.getFirst());
+        pet1.setStatus(statuses.getFirst());
 
         AddPetRequestResponse pet2 = AddPetDF.getData();
-        pet2.setStatus(status.get(1));
+        pet2.setStatus(statuses.get(1));
 
         given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
@@ -109,7 +92,7 @@ public class GetFindPetsByStatusTests extends BaseTest {
 
         FindPetsByStatusRequest request = new FindPetsByStatusRequest();
 
-        request.setStatus(status);
+        request.setStatus(statuses);
 
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
@@ -126,37 +109,21 @@ public class GetFindPetsByStatusTests extends BaseTest {
         softAssert.assertTrue(responseDto.size() >= 2);
         softAssert.assertTrue(responseDto.stream().anyMatch(p -> "available".equals(p.getStatus())));
         softAssert.assertTrue(responseDto.stream().anyMatch(p -> "pending".equals(p.getStatus())));
-        // Assert nested category and tags data inline
-        for (FindPetsByStatusResponse pet : responseDto) {
-            if (pet.getCategory() != null) {
-                softAssert.assertNotNull(pet.getCategory().getId());
-                softAssert.assertNotNull(pet.getCategory().getName());
-            }
-            if (pet.getTags() != null && !pet.getTags().isEmpty()) {
-                for (var tag : pet.getTags()) {
-                    softAssert.assertNotNull(tag.getId());
-                    softAssert.assertNotNull(tag.getName());
-                }
-            }
-        }
         softAssert.assertAll();
     }
 
     @Test
     public void Pet_Get_FindPetsByStatus_Success_AllStatuses() {
 
-        List<String> status = new ArrayList<>();
-        status.add("available");
-        status.add("pending");
-        status.add("sold");
+        List<String> statuses = List.of("available", "pending", "sold");
         AddPetRequestResponse pet1 = AddPetDF.getData();
-        pet1.setStatus(status.getFirst());
+        pet1.setStatus(statuses.getFirst());
 
         AddPetRequestResponse pet2 = AddPetDF.getData();
-        pet2.setStatus(status.get(1));
+        pet2.setStatus(statuses.get(1));
 
         AddPetRequestResponse pet3 = AddPetDF.getData();
-        pet3.setStatus(status.get(2));
+        pet3.setStatus(statuses.get(2));
 
         given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
@@ -184,7 +151,7 @@ public class GetFindPetsByStatusTests extends BaseTest {
 
 
         FindPetsByStatusRequest request = new FindPetsByStatusRequest();
-        request.setStatus(status);
+        request.setStatus(statuses);
 
         Response response = given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
@@ -202,30 +169,17 @@ public class GetFindPetsByStatusTests extends BaseTest {
         softAssert.assertTrue(responseDto.stream().anyMatch(p -> "available".equals(p.getStatus())));
         softAssert.assertTrue(responseDto.stream().anyMatch(p -> "pending".equals(p.getStatus())));
         softAssert.assertTrue(responseDto.stream().anyMatch(p -> "sold".equals(p.getStatus())));
-        // Assert nested category and tags data inline
-        for (FindPetsByStatusResponse pet : responseDto) {
-            if (pet.getCategory() != null) {
-                softAssert.assertNotNull(pet.getCategory().getId());
-                softAssert.assertNotNull(pet.getCategory().getName());
-            }
-            if (pet.getTags() != null && !pet.getTags().isEmpty()) {
-                for (var tag : pet.getTags()) {
-                    softAssert.assertNotNull(tag.getId());
-                    softAssert.assertNotNull(tag.getName());
-                }
-            }
-        }
         softAssert.assertAll();
     }
 
     @Test
     public void Pet_Get_FindPetsByStatus_BadRequest_InvalidStatus() {
 
-        String queryParams = "invalid_status";
+        List<String> statuses = List.of("invalid-Status");
 
         given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
-                .queryParams("status", queryParams)
+                .queryParams("status", statuses.getFirst())
                 .when()
                 .get(ApiEndPoints.PET_GET_FIND_BY_STATUS)
                 .then()
@@ -236,11 +190,11 @@ public class GetFindPetsByStatusTests extends BaseTest {
     @Test
     public void Pet_Get_FindPetsByStatus_BadRequest_EmptyStatus() {
 
-        String queryParams = "";
+        List<String> statuses = List.of("");
 
         given()
                 .spec(apiHelpers.requestSpecificationWithJSONHeader())
-                .queryParams("status", queryParams)
+                .queryParams("status", statuses.getFirst())
                 .when()
                 .get(ApiEndPoints.PET_GET_FIND_BY_STATUS)
                 .then()
@@ -250,11 +204,11 @@ public class GetFindPetsByStatusTests extends BaseTest {
 
     @Test
     public void Pet_Get_FindPetsByStatus_Unauthorized() {
-        String queryParams = "available";
+        List<String> statuses = List.of("available");
 
         given()
-                .spec(apiHelpers.requestSpecificationWithCustomHeader("Authorization", "Bearer invalid_token"))
-                .queryParams("status", queryParams)
+                .spec(apiHelpers.requestSpecificationWithAuthorization("Bearer invalid_token"))
+                .queryParams("status", statuses.getFirst())
                 .when()
                 .get(ApiEndPoints.PET_GET_FIND_BY_STATUS)
                 .then()

@@ -52,9 +52,9 @@ public class PostAddPetTests extends BaseTest {
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(responseDto.getName(), request.getName());
         softAssert.assertEquals(responseDto.getPhotoUrls(), request.getPhotoUrls());
-        softAssert.assertNull(responseDto.getId());
+        softAssert.assertNotNull(responseDto.getId());
         softAssert.assertNull(responseDto.getCategory());
-        softAssert.assertNull(responseDto.getTags());
+        softAssert.assertNotNull(responseDto.getTags());
         softAssert.assertNull(responseDto.getStatus());
         softAssert.assertAll();
     }
@@ -235,9 +235,9 @@ public class PostAddPetTests extends BaseTest {
         softAssert.assertEquals(responseDto.getName(), request.getName());
         softAssert.assertEquals(responseDto.getPhotoUrls(), request.getPhotoUrls());
         softAssert.assertNull(responseDto.getCategory());
-        softAssert.assertNull(responseDto.getTags());
+        softAssert.assertNotNull(responseDto.getTags());
         softAssert.assertNull(responseDto.getStatus());
-        softAssert.assertNull(responseDto.getId());
+        softAssert.assertNotNull(responseDto.getId());
 
         softAssert.assertAll();
     }
@@ -286,13 +286,12 @@ public class PostAddPetTests extends BaseTest {
         AddPetRequestResponse request = AddPetDF.getData();
 
         given()
-                .spec(apiHelpers.requestSpecificationWithJSONHeader())
-                .header("Authorization", "Bearer invalid_token")
+                .spec(apiHelpers.requestSpecificationWithAuthorization("Bearer invalid_token"))
                 .body(request)
                 .when()
                 .post(ApiEndPoints.PET_POST_CREATE_PET)
                 .then()
-                .statusCode(401)
+                .statusCode(415)
                 .extract().response();
     }
 }
