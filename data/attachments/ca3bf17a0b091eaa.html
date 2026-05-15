@@ -1,0 +1,39 @@
+<div>POST to https://petstore.swagger.io/v2/user</div>
+
+    <h4>Body</h4>
+    <div>
+    <pre class="preformated-text">
+{
+    &quot;id&quot;: 252,
+    &quot;username&quot;: &quot;User@#$%^&amp;*()_+-=[]{}|;&#39;:\&quot;,./&lt;&gt;?&quot;,
+    &quot;firstName&quot;: &quot;Ella&quot;,
+    &quot;lastName&quot;: &quot;Koch&quot;,
+    &quot;email&quot;: &quot;tisa.carter@yahoo.com&quot;,
+    &quot;password&quot;: &quot;81394l72v3i&quot;,
+    &quot;phone&quot;: &quot;(730) 229-2169&quot;,
+    &quot;userStatus&quot;: 5
+}    </pre>
+    </div>
+
+    <h4>Headers</h4>
+    <div>
+            <div>Accept: */*</div>
+            <div>Content-Type: application/json</div>
+    </div>
+
+
+
+    <h4>Curl</h4>
+    <div>
+        curl -v -X POST &#39;https://petstore.swagger.io/v2/user&#39; -H &#39;Accept: */*&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;id&quot;: 252,
+    &quot;username&quot;: &quot;User@#$%^&amp;*()_+-=[]{}|;&#39;:\&quot;,./&lt;&gt;?&quot;,
+    &quot;firstName&quot;: &quot;Ella&quot;,
+    &quot;lastName&quot;: &quot;Koch&quot;,
+    &quot;email&quot;: &quot;tisa.carter@yahoo.com&quot;,
+    &quot;password&quot;: &quot;81394l72v3i&quot;,
+    &quot;phone&quot;: &quot;(730) 229-2169&quot;,
+    &quot;userStatus&quot;: 5
+}&#39;
+    </div>
+

@@ -1,0 +1,55 @@
+<div>PUT to https://petstore.swagger.io/v2/pet</div>
+
+    <h4>Body</h4>
+    <div>
+    <pre class="preformated-text">
+{
+    &quot;id&quot;: 566,
+    &quot;category&quot;: {
+        &quot;id&quot;: 56,
+        &quot;name&quot;: &quot;salmon&quot;
+    },
+    &quot;name&quot;: &quot;goldfish&quot;,
+    &quot;photoUrls&quot;: [
+        &quot;https://www.lorretta-hills.org/amet#magni&quot;
+    ],
+    &quot;tags&quot;: [
+        {
+            &quot;id&quot;: 19,
+            &quot;name&quot;: &quot;facilis&quot;
+        }
+    ],
+    &quot;status&quot;: &quot;invalid_status&quot;
+}    </pre>
+    </div>
+
+    <h4>Headers</h4>
+    <div>
+            <div>Accept: */*</div>
+            <div>Content-Type: application/json</div>
+    </div>
+
+
+
+    <h4>Curl</h4>
+    <div>
+        curl -v -X PUT &#39;https://petstore.swagger.io/v2/pet&#39; -H &#39;Accept: */*&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;id&quot;: 566,
+    &quot;category&quot;: {
+        &quot;id&quot;: 56,
+        &quot;name&quot;: &quot;salmon&quot;
+    },
+    &quot;name&quot;: &quot;goldfish&quot;,
+    &quot;photoUrls&quot;: [
+        &quot;https://www.lorretta-hills.org/amet#magni&quot;
+    ],
+    &quot;tags&quot;: [
+        {
+            &quot;id&quot;: 19,
+            &quot;name&quot;: &quot;facilis&quot;
+        }
+    ],
+    &quot;status&quot;: &quot;invalid_status&quot;
+}&#39;
+    </div>
+
