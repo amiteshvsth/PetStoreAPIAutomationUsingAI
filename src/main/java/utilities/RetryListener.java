@@ -12,7 +12,8 @@ public class RetryListener implements IRetryAnalyzer, IAnnotationTransformer {
 
     private static final int DEFAULT_RETRY = 1;
 
-    private int retryCount = 0;
+    private ThreadLocal<Integer> retryCount =
+            ThreadLocal.withInitial(() -> 0);
 
     @Override
     public boolean retry(ITestResult result) {
@@ -37,9 +38,9 @@ public class RetryListener implements IRetryAnalyzer, IAnnotationTransformer {
             }
         }
 
-        if (retryCount < maxRetry) {
+        if (retryCount.get() < maxRetry) {
 
-            retryCount++;
+            retryCount.set(retryCount.get() + 1);
 
             return true;
         }

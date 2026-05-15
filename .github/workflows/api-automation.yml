@@ -1,0 +1,132 @@
+name: PetStore API Automation
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+
+  api-tests:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # Checkout repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Setup Java 21
+      - name: Set Up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+
+      # Install Allure CLI
+      - name: Install Allure CLI
+        run: |
+          wget https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.tgz
+          tar -zxvf allure-2.29.0.tgz
+          sudo mv allure-2.29.0 /opt/allure
+          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
+
+      # Verify Allure installation
+      - name: Verify Allure
+        run: allure --version
+
+      # Checkout gh-pages branch
+      - name: Checkout gh-pages
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      # Run API Tests
+      - name: Run API Tests
+        run: mvn clean test
+        env:
+          ENVIRONMENT: QA
+          FRAMEWORK: RestAssured
+          EXECUTION: GitHubActions
+
+      # Restore history AFTER tests
+      # because mvn clean deletes target/
+      - name: Restore Allure History
+        if: always()
+        run: |
+
+          mkdir -p target/allure-results/history
+
+          if [ -d "gh-pages/history" ]; then
+            cp -r gh-pages/history/* target/allure-results/history
+          fi
+
+      # Create executor metadata
+      - name: Create Executor Metadata
+        if: always()
+        run: |
+          cat > target/allure-results/executor.json <<EOF
+          {
+            "name": "GitHub Actions",
+            "type": "github",
+            "buildName": "${{ github.workflow }}",
+            "buildUrl": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+            "reportUrl": "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/",
+            "buildOrder": "${{ github.run_number }}"
+          }
+          EOF
+
+      # Generate Allure Report
+      - name: Generate Allure Report
+        if: always()
+        run: |
+          allure generate target/allure-results \
+          --clean \
+          -o target/allure-report
+
+      # Upload Allure Report Artifact
+      - name: Upload Allure Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-report
+          path: target/allure-report
+
+      # Upload Raw Allure Results
+      - name: Upload Allure Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results
+          path: target/allure-results
+
+      # Upload Surefire Reports
+      - name: Upload Surefire Reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: surefire-reports
+          path: target/surefire-reports
+
+      # Deploy report to GitHub Pages
+      - name: Deploy Allure Report
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: target/allure-report

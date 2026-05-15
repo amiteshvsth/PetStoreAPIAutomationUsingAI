@@ -13,8 +13,12 @@
         <!-- Java -->
         <release.plugin.version>21</release.plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compliler.plugin.version>3.13.0</maven.compliler.plugin.version>
+        <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
         <maven.surefire.version>3.5.0</maven.surefire.version>
+        <allure.plugin.version>2.12.0</allure.plugin.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- Core Dependency Versions -->
         <jackson.version>2.18.7</jackson.version> <!-- Fixes GHSA-72hv-8253-57qq -->
@@ -126,11 +130,17 @@
 
     <build>
         <plugins>
+            <!-- Allure -->
+            <plugin>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>${allure.plugin.version}</version>
+            </plugin>
             <!-- Compiler -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven.compliler.plugin.version}</version>
+                <version>${maven.compiler.plugin.version}</version>
                 <configuration>
                     <release>${release.plugin.version}</release>
                     <annotationProcessorPaths>

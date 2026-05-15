@@ -40,7 +40,10 @@ public class BaseTest {
                 try (Stream<Path> paths = Files.walk(ALLURE_RESULTS)) {
 
                     paths.sorted(Comparator.reverseOrder())
-                            .filter(path -> !path.startsWith(ALLURE_HISTORY_DESTINATION))
+                            .filter(path ->
+                                    !path.equals(ALLURE_HISTORY_DESTINATION)
+                                            && !path.startsWith(ALLURE_HISTORY_DESTINATION)
+                            )
                             .forEach(path -> {
 
                                 try {
@@ -70,6 +73,9 @@ public class BaseTest {
 
             paths.forEach(path -> {
                 try {
+                    if (path.equals(ALLURE_HISTORY_SOURCE)) {
+                        return;
+                    }
                     Path targetPath = ALLURE_HISTORY_DESTINATION.resolve(ALLURE_HISTORY_SOURCE.relativize(path));
 
                     if (Files.isDirectory(path)) {
@@ -93,9 +99,26 @@ public class BaseTest {
     private void createEnvironmentPropertiesFile() {
 
         Properties properties = new Properties();
-        properties.setProperty("Environment", EnvConfig.get("ENVIRONMENT"));
-        properties.setProperty("Framework", EnvConfig.get("FRAMEWORK"));
-        properties.setProperty("Execution", EnvConfig.get("EXECUTION"));
+        properties.setProperty(
+                "Environment",
+                EnvConfig.get("ENVIRONMENT") != null
+                        ? EnvConfig.get("ENVIRONMENT")
+                        : "QA"
+        );
+
+        properties.setProperty(
+                "Framework",
+                EnvConfig.get("FRAMEWORK") != null
+                        ? EnvConfig.get("FRAMEWORK")
+                        : "RestAssured"
+        );
+
+        properties.setProperty(
+                "Execution",
+                EnvConfig.get("EXECUTION") != null
+                        ? EnvConfig.get("EXECUTION")
+                        : "GitHubActions"
+        );
         Path environmentFile = ALLURE_RESULTS.resolve("environment.properties");
 
         try (OutputStream outputStream = Files.newOutputStream(environmentFile)) {
