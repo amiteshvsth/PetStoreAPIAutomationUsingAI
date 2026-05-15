@@ -1,0 +1,39 @@
+<div>POST to https://petstore.swagger.io/v2/user</div>
+
+    <h4>Body</h4>
+    <div>
+    <pre class="preformated-text">
+{
+    &quot;id&quot;: 234,
+    &quot;username&quot;: &quot;Jeffery Quitzon&quot;,
+    &quot;firstName&quot;: &quot;Treva&quot;,
+    &quot;lastName&quot;: &quot;Schamberger&quot;,
+    &quot;email&quot;: &quot;invalid-email-format&quot;,
+    &quot;password&quot;: &quot;32b2v5k3&quot;,
+    &quot;phone&quot;: &quot;(305) 282-6649&quot;,
+    &quot;userStatus&quot;: 6
+}    </pre>
+    </div>
+
+    <h4>Headers</h4>
+    <div>
+            <div>Accept: */*</div>
+            <div>Content-Type: application/json</div>
+    </div>
+
+
+
+    <h4>Curl</h4>
+    <div>
+        curl -v -X POST &#39;https://petstore.swagger.io/v2/user&#39; -H &#39;Accept: */*&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;id&quot;: 234,
+    &quot;username&quot;: &quot;Jeffery Quitzon&quot;,
+    &quot;firstName&quot;: &quot;Treva&quot;,
+    &quot;lastName&quot;: &quot;Schamberger&quot;,
+    &quot;email&quot;: &quot;invalid-email-format&quot;,
+    &quot;password&quot;: &quot;32b2v5k3&quot;,
+    &quot;phone&quot;: &quot;(305) 282-6649&quot;,
+    &quot;userStatus&quot;: 6
+}&#39;
+    </div>
+
