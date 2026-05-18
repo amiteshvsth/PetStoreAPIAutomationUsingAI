@@ -55,16 +55,7 @@ jobs:
           ref: gh-pages
           path: gh-pages
 
-      # Run API Tests
-      - name: Run API Tests
-        run: mvn clean test
-        env:
-          ENVIRONMENT: QA
-          FRAMEWORK: RestAssured
-          EXECUTION: GitHubActions
-
-      # Restore history AFTER tests
-      # because mvn clean deletes target/
+      # Restore history BEFORE tests
       - name: Restore Allure History
         if: always()
         run: |
@@ -74,6 +65,14 @@ jobs:
           if [ -d "gh-pages/history" ]; then
             cp -r gh-pages/history/* target/allure-results/history
           fi
+
+      # Run API Tests
+      - name: Run API Tests
+        run: mvn clean test
+        env:
+          ENVIRONMENT: QA
+          FRAMEWORK: RestAssured
+          EXECUTION: GitHubActions
 
       # Create executor metadata
       - name: Create Executor Metadata

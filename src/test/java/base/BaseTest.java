@@ -19,16 +19,16 @@ import java.util.stream.Stream;
 public class BaseTest {
 
     private static final Path ALLURE_RESULTS = Paths.get("target/allure-results");
-    private static final Path ALLURE_HISTORY_SOURCE = Paths.get("target/allure-report/history");
+    private static final Path ALLURE_HISTORY_STORAGE = Paths.get("allure-history");
     private static final Path ALLURE_HISTORY_DESTINATION = ALLURE_RESULTS.resolve("history");
     protected final ApiHelpers apiHelpers = new ApiHelpers();
 
     @BeforeSuite
-    public void setupSuite() {
+    public void setupSuite() throws IOException {
 
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails(LogDetail.ALL);
         cleanAllureResults();
-        copyAllureHistory();
+        restoreAllureHistory();
         createEnvironmentPropertiesFile();
     }
 
@@ -40,10 +40,7 @@ public class BaseTest {
                 try (Stream<Path> paths = Files.walk(ALLURE_RESULTS)) {
 
                     paths.sorted(Comparator.reverseOrder())
-                            .filter(path ->
-                                    !path.equals(ALLURE_HISTORY_DESTINATION)
-                                            && !path.startsWith(ALLURE_HISTORY_DESTINATION)
-                            )
+                            .filter(path -> !path.equals(ALLURE_RESULTS))
                             .forEach(path -> {
 
                                 try {
@@ -63,20 +60,21 @@ public class BaseTest {
         }
     }
 
-    private void copyAllureHistory() {
+    private void restoreAllureHistory() throws IOException {
 
-        if (!Files.exists(ALLURE_HISTORY_SOURCE)) {
+        if (!Files.exists(ALLURE_HISTORY_STORAGE)) {
+            System.out.println("No previous Allure history found.");
             return;
         }
-
-        try (Stream<Path> paths = Files.walk(ALLURE_HISTORY_SOURCE)) {
+        Files.createDirectories(ALLURE_HISTORY_DESTINATION);
+        try (Stream<Path> paths = Files.walk(ALLURE_HISTORY_STORAGE)) {
 
             paths.forEach(path -> {
                 try {
-                    if (path.equals(ALLURE_HISTORY_SOURCE)) {
+                    if (path.equals(ALLURE_HISTORY_STORAGE)) {
                         return;
                     }
-                    Path targetPath = ALLURE_HISTORY_DESTINATION.resolve(ALLURE_HISTORY_SOURCE.relativize(path));
+                    Path targetPath = ALLURE_HISTORY_DESTINATION.resolve(ALLURE_HISTORY_STORAGE.relativize(path));
 
                     if (Files.isDirectory(path)) {
                         Files.createDirectories(targetPath);
@@ -86,13 +84,13 @@ public class BaseTest {
                     }
 
                 } catch (IOException e) {
-                    throw new RuntimeException("Failed to copy Allure history.", e);
+                    throw new RuntimeException("Failed to restore Allure history.", e);
                 }
             });
-            System.out.println("Allure history copied successfully.");
+            System.out.println("Allure history restored successfully.");
 
         } catch (Exception e) {
-            throw new RuntimeException("Failed to copy Allure history.", e);
+            throw new RuntimeException("Failed to restore Allure history.", e);
         }
     }
 
