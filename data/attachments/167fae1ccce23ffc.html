@@ -1,0 +1,43 @@
+<div>POST to https://petstore.swagger.io/v2/user/createWithList</div>
+
+    <h4>Body</h4>
+    <div>
+    <pre class="preformated-text">
+[
+    {
+        &quot;id&quot;: 77,
+        &quot;username&quot;: &quot;Golda Orn&quot;,
+        &quot;firstName&quot;: &quot;Jarrod&quot;,
+        &quot;lastName&quot;: &quot;Olson&quot;,
+        &quot;email&quot;: &quot;invalid-email-format&quot;,
+        &quot;password&quot;: &quot;e08scj17efwt9j2i&quot;,
+        &quot;phone&quot;: &quot;(472) 213-3059&quot;,
+        &quot;userStatus&quot;: 8
+    }
+]    </pre>
+    </div>
+
+    <h4>Headers</h4>
+    <div>
+            <div>Accept: */*</div>
+            <div>Content-Type: application/json</div>
+    </div>
+
+
+
+    <h4>Curl</h4>
+    <div>
+        curl -v -X POST &#39;https://petstore.swagger.io/v2/user/createWithList&#39; -H &#39;Accept: */*&#39; -H &#39;Content-Type: application/json&#39; -d &#39;[
+    {
+        &quot;id&quot;: 77,
+        &quot;username&quot;: &quot;Golda Orn&quot;,
+        &quot;firstName&quot;: &quot;Jarrod&quot;,
+        &quot;lastName&quot;: &quot;Olson&quot;,
+        &quot;email&quot;: &quot;invalid-email-format&quot;,
+        &quot;password&quot;: &quot;e08scj17efwt9j2i&quot;,
+        &quot;phone&quot;: &quot;(472) 213-3059&quot;,
+        &quot;userStatus&quot;: 8
+    }
+]&#39;
+    </div>
+
